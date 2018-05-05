@@ -1,27 +1,50 @@
-from flask import Flask,jsonify,request
-from flask import request,jsonify
-from flask_restful import Resource,Api
+from flask import jsonify,request
+from flask_restful import Resource
 from connect_mongo import lms
-import uuid
+from flask_cors import CORS,cross_origin
 
-class AddEmployees(Resource) :
+class AddEmployee(Resource) :
+
+    @cross_origin()
     def post(self) :
-        """Add new employees"""
+        """Add new employee
+        Args:
+            qci_id : QCI ID of new enrolled employee
+            name : name of employee
+            email : Email Id of employee
+            board : Board of employee working in
+            designation : Designation of employee
+            type_of_employee : Type of employee, whether regular,professional or contract
+            gender : Gender of employee
+            bal_cl : Balance casual leave of employee
+            bal_sl :Balance sick leave of employee
+            bal_pl : Balance privilege leave of mployee
+            bal_ml : Balance maternity leave only for female employee
+            bal_ptl : Balance paternity leave only for male employee
+            bal_eol : Balance extra ordinary leave for employee
+        """
         try :
             data = request.get_json(force=True)
+            print(data)
             qci_id = data['qci_id']
             name = data['name']
             email = data['email']
-            board = data['dept']
+            board = data['board']
             designation = data['designation']
             type_of_employee = data['type_of_employee']
             gender = data['gender']
-            #total_cl = int(data['total_cl'])
-            #total_sl = int(data['total_sl'])
-            #total_rh = int(data['total_rh'])
+            bal_cl = int(data['bal_cl'])
+            bal_sl = int(data['bal_sl'])
+            bal_pl = int(data['bal_pl'])
+            if gender == 'Male':
+                bal_ptl = int(data['bal_ptl'])
+                bal_ml = 0
+            else:
+                bal_ml = int(data['bal_ml'])
+                bal_ptl=0
+            bal_eol = int(data['bal_eol'])
             password = data['password']    
         
-            return jsonify({'success':False, 'error':qci_id})
         except Exception as e:
             return jsonify({'success':False, 'error':e.__str__()})
         
@@ -30,31 +53,42 @@ class AddEmployees(Resource) :
             if qci_id_exist:
                 return jsonify({'success':True,'message':'QCI ID already exists!'})
             else:
-                new_qci_id = uuid.uuid4().hex
                 new_emp = {
-                    'qci_id' : new_qci_id,
-                    'name' : name,
-                    'email' : email,
-                    'designation' : designation,
-                    'board' : board,
-                    'gender' : gender,
-                    'type_of_employee' : type_of_employee,
-                    #'total_cl' : total_cl,
-                    #'total_rh' : total_rh,
-                    #'total_sl' : total_sl,
-                    'password' : password
-                }
-
-                empCount = total_emp(employees)
-                print (empCount)
+                        'qci_id' : qci_id,
+                        'name' : name,
+                        'email' : email,
+                        'board' : board,   
+                        'designation' : designation,
+                        'type_of_employee' : type_of_employee,
+                        'gender' : gender,
+                        'bal_cl': bal_cl,
+                        'bal_sl' : bal_sl,
+                        'bal_pl' : bal_pl,
+                        'bal_ml':bal_ml,
+                        'bal_ptl':bal_ptl,
+                        'bal_eol' : bal_eol,     
+                        'password' : password
+                        }                                      
                 lms.employees.insert_one(new_emp)
-                return jsonify({"success":True,"message":"Item details inserted"})
-        except Exception as e:
-            print (e.__str)
-            return jsonify({"succees":False,"error":e.__str__()})
+                return jsonify({"success":True,"message":"New Employee added succssfully"})
 
-    """Total no. of employees"""
-    def total_emp(employees):
-        count = 0     
-        for emp in employees:
-            return count
+        except Exception as e:
+            return jsonify({"succees":False,"error":e.__str__()}) 
+
+    @cross_origin()
+    def get(self,id=None):
+        """Displays employees details of particular qci id
+        Args:
+            QCI ID
+        """
+        data=[]
+        try:
+            data=lms.employees.find_one({"qci_id":id},{"_id":0})
+            if data:  
+                return jsonify({"success":True,'data':data})                
+            else:
+                return jsonify({"success":False,"messages":"no data found"})
+
+        except Exception as e:
+            return jsonify({'success':False, 'error':e.__str__()})
+
