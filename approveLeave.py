@@ -2,10 +2,10 @@ from flask import jsonify,request
 from flask_restful import Resource
 from connect_mongo import lms
 from flask_cors import CORS,cross_origin
-
+from auth import auth
 """Yet to do"""
 class ApproveLeave(Resource):
-
+    @auth
     @cross_origin()
     def post(self):
         """func that approves leave after meeting the requirement"""
@@ -42,7 +42,6 @@ class ApproveLeave(Resource):
             if application_record is None:
                 return jsonify({'success':True,'message':"No application record Found"})
         except Exception as e:
-            print(e.__str__())
             return jsonify({"succees":False,"error":e.__str__()}) 
         try:
             if application_record['leave_type'] == 'sl':
@@ -156,7 +155,7 @@ class ApproveLeave(Resource):
                                 }
                         }
                     )
-            elif application_record['leave_type'] == 'eol':
+            else :
                 extra_ordinary = int(employee_record['bal_eol']) - application_record['days']
                 if extra_ordinary < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
@@ -179,10 +178,7 @@ class ApproveLeave(Resource):
                         }
                     )
     
-
-
-
-            return jsonify({'success':True,message':'leave Approved'})
+            return jsonify({'success':True,'message':'Leave Approved'})
 
         except Exception as e:
             return jsonify({"succees":False,"error":e.__str__(),'message':'dfghj'}) 

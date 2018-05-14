@@ -11,9 +11,15 @@ from employeeDetails import EmployeeDetails
 from applications import Applications
 from flask_cors import CORS
 from approveLeave import ApproveLeave
+from loginAdmin import LoginAdmin
+from admin import Admin
+from loginEmployee import LoginEmployee
+
 app = Flask(__name__)
 api = Api(app)
-CORS(app)
+CORS(app,support_credentials=True)
+
+app.config["CORS_HEADERS"]='Authorization'
 
 api.add_resource(AddEmployee,'/lms/addEmployee')
 api.add_resource(AddEmployee,'/lms/addEmployee/<string:id>',endpoint="employees")
@@ -24,7 +30,10 @@ api.add_resource(ApplyLeave,'/lms/applyLeave')
 api.add_resource(EmployeeDetails,'/lms/employeeDetails')
 api.add_resource(Applications,'/lms/applications')
 api.add_resource(ApproveLeave,'/lms/approveLeave')
+api.add_resource(LoginAdmin,"/lms/loginAdmin")
+api.add_resource(LoginEmployee,"/lms/loginEmp")
 
+api.add_resource(Admin,"/lms/admin")
 
 
 if  __name__=='__main__':

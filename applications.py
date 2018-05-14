@@ -2,11 +2,12 @@ from flask import jsonify
 from flask_cors import cross_origin
 from flask_restful import Resource
 from connect_mongo import lms
-
+from auth import auth
 
 class Applications(Resource):
 
     """func to show each employees detail"""
+    @auth
     @cross_origin()
     def get(self):
 
