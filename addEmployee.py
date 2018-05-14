@@ -2,9 +2,11 @@ from flask import jsonify,request
 from flask_restful import Resource
 from connect_mongo import lms
 from flask_cors import CORS,cross_origin
+from auth import auth
+import hashlib
 
 class AddEmployee(Resource) :
-
+    @auth
     @cross_origin()
     def post(self) :
         """Add new employee
@@ -53,6 +55,7 @@ class AddEmployee(Resource) :
             if qci_id_exist:
                 return jsonify({'success':True,'message':'QCI ID already exists!'})
             else:
+                password = hashlib.sha256(password.encode("utf-8")).hexdigest()
                 new_emp = {
                         'qci_id' : qci_id,
                         'name' : name,
@@ -75,13 +78,13 @@ class AddEmployee(Resource) :
         except Exception as e:
             return jsonify({"succees":False,"error":e.__str__()}) 
 
+    @auth
     @cross_origin()
     def get(self,id=None):
         """Displays employees details of particular qci id
         Args:
             QCI ID
         """
-        data=[]
         try:
             data=lms.employees.find_one({"qci_id":id},{"_id":0})
             if data:  

@@ -1,27 +1,29 @@
 # Import smtplib for the actual sending function
 import smtplib
 # Import email modules
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 from email import encoders
+print("SDF")
 """yet to do"""
-def send_email(toaddr, ccaddr, subject, body, file):
+def send_email(toaddr, subject, body):
     """Send email"""
-    fromaddr = "FROM_EMAIL_ADDRESS"
-    server = smtplib.SMTP('SERVER_IP', PORT_NUMBER)
+    fromaddr = "honey.ashthana02@gmail.com"
+    server = smtplib.SMTP('smtp.gmail.com: 587')
 
     msg = MIMEMultipart()
-
+    text= 'Hey'
+    print("GFDD")
     msg['From'] = fromaddr
-    msg['To'] = toaddr
+    msg['To'] = 'honey.ashthana02@gmail.com'
     msg['Subject'] = subject
 
-    if ccaddr is not None:
+    """if ccaddr is not None:
         rcpt = ccaddr + [toaddr]
         msg['Cc'] = ", ".join(ccaddr)
-    else:
-        rcpt = toaddr
+    else:"""
+    rcpt = toaddr
 
     html = """\
     <html>
@@ -29,14 +31,14 @@ def send_email(toaddr, ccaddr, subject, body, file):
       </font>
     </html>""".format(body=body)
 
-msg.attach(MIMEText(html, 'html'))
-
-server.starttls()
-server.login(fromaddr, "PASSWORD")
-text = msg.as_string()
-server.sendmail(fromaddr, rcpt, text)
-server.quit()
-
+    msg.attach(MIMEText(html, 'html'))
+    print(text)
+    server.starttls()
+    server.login(fromaddr, "Bunny@0209")
+    text = msg.as_string()
+    server.sendmail(fromaddr, rcpt, text)
+    server.quit()
+send_email('honey.ashthana02@gmail.com','dfghjk','dfgghjklhjk')
 
 
 

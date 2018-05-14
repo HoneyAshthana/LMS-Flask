@@ -3,9 +3,11 @@ from flask import request,jsonify
 from flask_restful import Resource
 from connect_mongo import lms
 from flask_cors import CORS,cross_origin
+from auth import auth
+import hashlib
 
 class EditEmployeeDetails(Resource) :
-    
+    @auth
     @cross_origin()
     def post(self) :
         """Edit employee detail
@@ -52,6 +54,7 @@ class EditEmployeeDetails(Resource) :
         try:
             qci_id_exist = lms.employees.find_one({'qci_id':qci_id})
             if qci_id_exist :
+                password = hashlib.sha256(password.encode("utf-8")).hexdigest()
                 lms.employees.update(
                     {'qci_id' : qci_id},
                     {

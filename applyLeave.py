@@ -3,7 +3,7 @@ from flask_restful import Resource,Api
 from connect_mongo import lms
 from flask_cors import CORS,cross_origin
 import uuid
-
+from auth import auth
 class ApplyLeave(Resource):
 
     """Apply Application for Leave
@@ -17,6 +17,7 @@ class ApplyLeave(Resource):
         leave_reason : Reason for Leave
         attachment : Attachment like files,etc. 
         """
+    @auth
     @cross_origin()
     def post(self):
 
@@ -36,7 +37,7 @@ class ApplyLeave(Resource):
             return jsonify({'success':False, 'error':e.__str__()})
 
         try:
-            qci_id_exists=lms.employees.find({"qci_id":qci_id})
+            qci_id_exists=lms.employees.find_one({"qci_id":qci_id})
             if qci_id_exists:
                 application_id = uuid.uuid4().hex
                 new_application={
@@ -58,9 +59,9 @@ class ApplyLeave(Resource):
         except Exception as e:
             return jsonify({'success':False, 'error':e.__str__()})
 
-    
+    @auth
     @cross_origin()
-    def get(self,id):
+    def get(self,id=None):
         """ Returns the application of particular QCI ID using application Id as argument"""
         data=[]
         try:
