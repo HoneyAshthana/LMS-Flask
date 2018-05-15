@@ -14,7 +14,7 @@ from approveLeave import ApproveLeave
 from loginAdmin import LoginAdmin
 from admin import Admin
 from loginEmployee import LoginEmployee
-
+from declineLeave import DeclineLeave
 app = Flask(__name__)
 api = Api(app)
 CORS(app,support_credentials=True)
@@ -32,8 +32,9 @@ api.add_resource(Applications,'/lms/applications')
 api.add_resource(ApproveLeave,'/lms/approveLeave')
 api.add_resource(LoginAdmin,"/lms/loginAdmin")
 api.add_resource(LoginEmployee,"/lms/loginEmp")
-
+api.add_resource(DeclineLeave,"/lms/declineLeave")
 api.add_resource(Admin,"/lms/admin")
+
 
 
 if  __name__=='__main__':

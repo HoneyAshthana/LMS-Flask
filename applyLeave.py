@@ -17,6 +17,7 @@ class ApplyLeave(Resource):
         leave_reason : Reason for Leave
         attachment : Attachment like files,etc. 
     """
+    
     #@auth
     @cross_origin()
     def post(self):

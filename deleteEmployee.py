@@ -20,3 +20,4 @@ class DeleteEmployee(Resource):
             return jsonify({"success":True,"message":"Employee removed successfully!"})
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})
+

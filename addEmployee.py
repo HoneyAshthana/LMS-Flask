@@ -5,6 +5,7 @@ from flask_cors import cross_origin
 from auth import auth
 import hashlib
 
+
 class AddEmployee(Resource) :
     @auth
     @cross_origin()

@@ -36,19 +36,21 @@ class DeclineLeave(Resource):
                 {
                     'leave_status':'Rejected',
                     'decline_reason':decline_reason,
-                    'date_reviewed'=str(datetime.now().date())
+                    'date_reviewed':str(datetime.now().date())
                 }
             }
             )
         except Exception as e:
             return jsonify({"succees":False,"error":e.__str__()}) 
 
+
+
         # Send email
         send_email(
-            application_record['email'], "QCI LMS", "Leave application declined",
+            application_record['email'], "Leave application declined",
             ("Your " + application_record['leave_type'] + " leave application for " + str(
                 application_record['days']) + " day(s) from " +
             application_record['date_from'] + " to " + application_record['date_to'] +
             " has been declined. Reason for decline: " + decline_reason))
 
-    return jsonify({'success':True,'message': 'Leave has been declined.'})
+        return jsonify({'success':True,'message': 'Leave has been declined.'})

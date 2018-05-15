@@ -5,6 +5,8 @@ from flask_cors import cross_origin
 from auth import auth
 from general import send_email
 
+
+
 class ApproveLeave(Resource):
     @auth
     @cross_origin()

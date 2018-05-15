@@ -23,7 +23,7 @@ def send_email(toaddr, subject, body):
         msg['Cc'] = ", ".join(ccaddr)
     else:"""
     rcpt = toaddr
-
+    
     html = """\
     <html>
       <font face="arial" size="2"> {body}
