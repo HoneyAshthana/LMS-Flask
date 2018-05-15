@@ -13,3 +13,4 @@ def auth(func):
 				return jsonify({"success":False,"response" : 'Headers required'})
 			return func( *args, **kwargs)
 		return decorated
+

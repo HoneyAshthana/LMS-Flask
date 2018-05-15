@@ -79,5 +79,3 @@ class EditEmployeeDetails(Resource) :
                 return jsonify({"success":False,"message":"Employee Id does not exist.Create new Id!"})
         except Exception as e:
             return jsonify({"succees":False,"error":e.__str__()}) 
-
-        

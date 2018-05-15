@@ -14,5 +14,6 @@ class TotalEmployees(Resource):
         for result in results:
             count += 1
         return jsonify({'success':True,'count':count})    
+        
 
 
