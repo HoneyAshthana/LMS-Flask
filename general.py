@@ -5,8 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-print("SDF")
-"""yet to do"""
+
 def send_email(toaddr, subject, body):
     """Send email"""
     fromaddr = "honey.ashthana02@gmail.com"
@@ -38,7 +37,7 @@ def send_email(toaddr, subject, body):
     text = msg.as_string()
     server.sendmail(fromaddr, rcpt, text)
     server.quit()
-send_email('honey.ashthana02@gmail.com','dfghjk','dfgghjklhjk')
+#send_email('honey.ashthana02@gmail.com','dfghjk','dfgghjklhjk')
 
 
 

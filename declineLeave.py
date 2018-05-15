@@ -1,3 +1,10 @@
+from flask_restful import Resource
+from connect_mongo import lms
+from flask import request,jsonify
+from auth import auth
+from flask_cors import cross_origin
+from general import send_email
+
 class DeclineLeave(Resource):
     @auth
     @cross_origin()
@@ -38,11 +45,10 @@ class DeclineLeave(Resource):
 
         # Send email
         send_email(
-            application_record['email'], None, "Leave application declined",
+            application_record['email'], "QCI LMS", "Leave application declined",
             ("Your " + application_record['leave_type'] + " leave application for " + str(
                 application_record['days']) + " day(s) from " +
             application_record['date_from'] + " to " + application_record['date_to'] +
-            " has been declined. Reason for decline: " + decline_reason),
-            file=None)
+            " has been declined. Reason for decline: " + decline_reason))
 
-    return jsonify({'message': 'Leave has been declined.'})
+    return jsonify({'success':True,'message': 'Leave has been declined.'})

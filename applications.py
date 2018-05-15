@@ -4,19 +4,18 @@ from flask_restful import Resource
 from connect_mongo import lms
 from auth import auth
 
-class Applications(Resource):
+class Applications(Resource) :
 
-    """func to show each employees detail"""
+    """func to show each employees application details"""
     @auth
     @cross_origin()
     def get(self):
 
         try:
             results = list(lms.applications.find({},{'_id':0}))
-            print(results)
-            return jsonify(results)                
+            return jsonify({'success':True, 'data': results})                
             
-        except Exception as e:
+        except Exception as e :
             return jsonify({'success':False, 'error':e.__str__()})
     
 
