@@ -1,5 +1,5 @@
-from flask import jsonify,request
-from flask_cors import CORS,cross_origin
+from flask import jsonify
+from flask_cors import cross_origin
 from flask_restful import Resource
 from connect_mongo import lms
 from auth import auth
@@ -13,7 +13,7 @@ class EmployeeDetails(Resource):
 
         try:
             results = list(lms.employees.find({},{'_id':0}))
-            return jsonify(results)                
+            return jsonify({'success':True,'data':results})                
             
         except Exception as e:
             return jsonify({'success':False, 'error':e.__str__()})

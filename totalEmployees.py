@@ -1,7 +1,7 @@
-from flask_cors import CORS,cross_origin
+from flask_cors import cross_origin
 from flask_restful import Resource
 from connect_mongo import lms
-from flask import jsonify,request
+from flask import jsonify
 from auth import auth
 
 class TotalEmployees(Resource):
@@ -13,6 +13,6 @@ class TotalEmployees(Resource):
         results = list(lms.employees.find({},{'_id':0}))
         for result in results:
             count += 1
-        return jsonify(count)    
+        return jsonify({'success':True,'count':count})    
 
 

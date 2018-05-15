@@ -1,7 +1,7 @@
 from flask import jsonify,request
 from flask_restful import Resource
 from connect_mongo import lms
-from flask_cors import CORS,cross_origin
+from flask_cors import cross_origin
 from auth import auth
 import hashlib
 
@@ -43,17 +43,17 @@ class AddEmployee(Resource) :
                 bal_ml = 0
             else:
                 bal_ml = int(data['bal_ml'])
-                bal_ptl=0
+                bal_ptl = 0
             bal_eol = int(data['bal_eol'])
             password = data['password']    
         
-        except Exception as e:
-            return jsonify({'success':False, 'error':e.__str__()})
+        except Exception as e :
+            return jsonify({'success' : False, 'error' : e.__str__()})
         
         try:
-            qci_id_exist = lms.employees.find_one({'qci_id':qci_id})
-            if qci_id_exist:
-                return jsonify({'success':True,'message':'QCI ID already exists!'})
+            qci_id_exist = lms.employees.find_one({'qci_id' : qci_id})
+            if qci_id_exist :
+                return jsonify({'success' : True, 'message' : 'QCI ID already exists!'})
             else:
                 password = hashlib.sha256(password.encode("utf-8")).hexdigest()
                 new_emp = {
@@ -67,31 +67,31 @@ class AddEmployee(Resource) :
                         'bal_cl': bal_cl,
                         'bal_sl' : bal_sl,
                         'bal_pl' : bal_pl,
-                        'bal_ml':bal_ml,
-                        'bal_ptl':bal_ptl,
+                        'bal_ml': bal_ml,
+                        'bal_ptl': bal_ptl,
                         'bal_eol' : bal_eol,     
                         'password' : password
                         }                                      
                 lms.employees.insert_one(new_emp)
-                return jsonify({"success":True,"message":"New Employee added succssfully"})
+                return jsonify({"success" : True, "message" : "New Employee added successfully"})
 
-        except Exception as e:
-            return jsonify({"succees":False,"error":e.__str__()}) 
+        except Exception as e :
+            return jsonify({"success" : False, "error" : e.__str__()}) 
 
     @auth
     @cross_origin()
-    def get(self,id=None):
+    def get(self, id=None) :
         """Displays employees details of particular qci id
         Args:
             QCI ID
         """
         try:
-            data=lms.employees.find_one({"qci_id":id},{"_id":0})
-            if data:  
-                return jsonify({"success":True,'data':data})                
+            data = lms.employees.find_one({"qci_id":id},{"_id":0})
+            if data :  
+                return jsonify({"success" : True,'data' : data})                
             else:
-                return jsonify({"success":False,"messages":"no data found"})
+                return jsonify({"success" : False, "messages" : "no data found"})
 
-        except Exception as e:
-            return jsonify({'success':False, 'error':e.__str__()})
+        except Exception as e :
+            return jsonify({'success' : False, 'error' : e.__str__()})
 

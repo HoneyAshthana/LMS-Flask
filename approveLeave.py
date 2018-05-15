@@ -1,9 +1,10 @@
 from flask import jsonify,request
 from flask_restful import Resource
 from connect_mongo import lms
-from flask_cors import CORS,cross_origin
+from flask_cors import cross_origin
 from auth import auth
-"""Yet to do"""
+from general import send_email
+
 class ApproveLeave(Resource):
     @auth
     @cross_origin()
@@ -38,6 +39,9 @@ class ApproveLeave(Resource):
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         print (employee_record)
         print(application_record)
+        print(application_record['leave_type'])
+
+        print(application_record['qci_id'])
         try:
             if application_record is None:
                 return jsonify({'success':True,'message':"No application record Found"})
@@ -177,7 +181,15 @@ class ApproveLeave(Resource):
                                 }
                         }
                     )
-    
+            send_email(
+            employee_record['email'], "Leave application approved",
+            ("Your " + leave_type + " leave application for " +
+             str(days) + " day(s) from " +
+             application_record['date_from'] + " to " + application_record['date_to'] +
+             " has been aprroved. " + "Your new " + leave_type +
+             " leave balance is " + str(format_number(sick)) +
+             " day(s)."))
+
             return jsonify({'success':True,'message':'Leave Approved'})
 
         except Exception as e:

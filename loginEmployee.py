@@ -5,7 +5,8 @@ import uuid
 import hashlib
 import jwt
 from auth import auth
-from flask_cors import CORS,cross_origin
+from flask_cors import cross_origin
+
 jwt_secret="qwertyuiiiimm"
 
 class LoginEmployee(Resource):
@@ -22,10 +23,10 @@ class LoginEmployee(Resource):
 
         try:
             if not data:
-                return jsonify({"success":False,"message":"please enter details"})
+                return jsonify({"success":False,"message":"Please enter details"})
         
             qci_id = data["qci_id"]
-            password=data["password"]            
+            password = data["password"]            
             if not qci_id or not password:
 
                 return jsonify({"success":False,"message":"please enter proper details"})
@@ -46,7 +47,7 @@ class LoginEmployee(Resource):
                         }
                 
                 token =  jwt.encode(token_json, jwt_secret, algorithm="HS256")
-                return jsonify({"success":True,"token": str(token.decode("utf-8")),"username":qci_id})
+                return jsonify({"success":True,"token" : str(token.decode("utf-8")),"username":qci_id})
         
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})

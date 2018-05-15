@@ -9,14 +9,14 @@ class DeleteEmployee(Resource):
     @auth
     @cross_origin()
     def post(self):
-        """Delete Employee from Employee Collection"""
+        """Delete Employee from Employee Pool"""
         try:
-            data=request.get_json(force=True)
+            data = request.get_json(force=True)
             print (data)
-            qci_id=data["qci_id"]
-            deleted_one=lms.employees.find_one({"qci_id":qci_id})
+            qci_id = data["qci_id"]
+            deleted_one = lms.employees.find_one({"qci_id":qci_id})
             lms.trash.insert_one(deleted_one)
             lms.employees.delete_one({"qci_id":qci_id})
-            return jsonify({"success":True,"message":"Employee Removed successfully!"})
+            return jsonify({"success":True,"message":"Employee removed successfully!"})
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})

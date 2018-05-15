@@ -4,12 +4,17 @@ from flask import request,jsonify
 import uuid
 import hashlib
 from auth import auth
-from flask_cors import CORS,cross_origin 
+from flask_cors import cross_origin 
 
-class Admin(Resource):
-    
+class Admin(Resource) :
+    """Adds admin in the pool
+    Args:
+        email : Email of admin
+        name : Name of admin
+        password : Admin's password
+    """
     @cross_origin()
-    # @auth
+    #@auth
     def post(self):
 
         try:    
@@ -28,21 +33,20 @@ class Admin(Resource):
             admin_exist = lms.admin.find_one({"email":email})
         
             if admin_exist:
-                return jsonify({"success":False,"message":"admin already exists"})
+                return jsonify({"success":False,"message":"Admin already exists!!"})
         
             else:
                 uid = uuid.uuid4().hex
                 password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-                print(password)
+                #print(password)
                 new_admin={    
                     "name":name,    
                     "email":email,
                     "password":password,
                     "admin_id":uid
                 }
-                
-                lms.admin.insert(new_admin)            
-                return jsonify({"success":True,"message":"admin added"})
+                lms.admin.insert_one(new_admin)            
+                return jsonify({"success":True,"message":"Admin added successfully!"})
         
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})

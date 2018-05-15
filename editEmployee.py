@@ -1,8 +1,7 @@
-from flask import Flask,jsonify,request
-from flask import request,jsonify
+from flask import jsonify,request
 from flask_restful import Resource
 from connect_mongo import lms
-from flask_cors import CORS,cross_origin
+from flask_cors import cross_origin
 from auth import auth
 import hashlib
 
@@ -20,7 +19,7 @@ class EditEmployeeDetails(Resource) :
             type_of_employee : Type of employee, whether regular,professional or contract
             gender : Gender of employee
             bal_cl : Balance casual leave of employee
-            bal_sl :Balance sick leave of employee
+            bal_sl : Balance sick leave of employee
             bal_pl : Balance privilege leave of mployee
             bal_ml : Balance maternity leave only for female employee
             bal_ptl : Balance paternity leave only for male employee
@@ -44,7 +43,7 @@ class EditEmployeeDetails(Resource) :
                 bal_ml = 0
             else:
                 bal_ml = int(data['bal_ml'])
-                bal_ptl=0
+                bal_ptl = 0
             bal_eol = int(data['bal_eol'])
             password = data['password']        
         
