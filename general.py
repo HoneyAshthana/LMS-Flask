@@ -6,14 +6,14 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+
+
 def send_email(toaddr, subject, body):
     """Send email"""
     fromaddr = "honey.ashthana02@gmail.com"
     server = smtplib.SMTP('smtp.gmail.com: 587')
-
+    text='Heu'
     msg = MIMEMultipart()
-    text= 'Hey'
-    print("GFDD")
     msg['From'] = fromaddr
     msg['To'] = 'honey.ashthana02@gmail.com'
     msg['Subject'] = subject
@@ -39,34 +39,38 @@ def send_email(toaddr, subject, body):
     server.quit()
 #send_email('honey.ashthana02@gmail.com','dfghjk','dfgghjklhjk')
 
+"""function that will send the user’s files directly into our bucket.
+    using boto3’s Client.upload_fileobj method for this.
+    Args:
+        a file object
+        a bucket name and 
+        an optional acl keyword argument
+"""
+"""
+def upload_file_to_s3(file, bucket_name, acl="public-read"):
+
+    try:
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            file.filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+
+    except Exception as e:
+        print("Something Happened: ", e)
+        return e
+
+    return "{}{}".format(app.config["S3_LOCATION"], file.filename)
+"""
+
+""" in addition to ACL we set the ContentType key in ExtraArgs to the file’s content type. 
+This is because by default, all files uploaded to an S3 bucket have their content type set 
+to binary/octet-stream, forcing the browser to prompt users to download the files instead of just
+ reading them when accessed via a public URL"""
 
 
-
-
-
-
-
-
-"""from app import app
-import smtplib
-from flask_mail import Mail, Message
-
-app.config.update(
-    DEBUG=True,
-    #mail settings
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=465,
-    MAIL_USE_SSL=True,
-    MAIL_USERNAME='honey.ashthana02@gmail.com',
-    MAIL_PASSWORD='Bunny@0209',
-)
-mail=Mail(app)
-
-def send_email(subject,sender,recipients,text_body,html_body):
-    
-        msg=Message(subject,sender="honey.ashthana02@gmail.com",recipients=["honey.ashthana02@gmail.com"])
-        msg.body=text_body
-        msg.html = html_body
-        mail.send(msg)
-        return'Mail Sent"""
-    
+ 

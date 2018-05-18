@@ -9,7 +9,10 @@ class DeleteEmployee(Resource):
     @auth
     @cross_origin()
     def post(self):
-        """Delete Employee from Employee Pool"""
+        """Delete Employee from Employee Pool
+        Args:
+            qci_id : Id of employee to be deleted
+        """
         try:
             data = request.get_json(force=True)
             print (data)

@@ -13,8 +13,8 @@ class Admin(Resource) :
         name : Name of admin
         password : Admin's password
     """
-    @cross_origin()
     #@auth
+    @cross_origin()
     def post(self):
 
         try:    

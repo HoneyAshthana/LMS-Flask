@@ -5,20 +5,20 @@ from flask_cors import cross_origin
 from auth import auth
 from general import send_email
 
-
-
 class ApproveLeave(Resource):
-    @auth
+    #@auth
     @cross_origin()
     def post(self):
-        """func that approves leave after meeting the requirement"""
+        """Approves Leave
+            Args:
+                application_id : Application Id of Employee
+                qci_id : QCI ID of the applicant
+        """
         data = request.get_json(force=True)
         print (data)
         application_id = data['application_id']
         qci_id = data['qci_id']
-        # days = data['days']
-        # leave_type = data['leave_type']
-        # gender = data['gender']
+        date_reviewed = data['date_reviewed']
         lms.applications.update(
             {'application_id':application_id},
             {
@@ -33,25 +33,25 @@ class ApproveLeave(Resource):
             {
                 '$push':
                 {
-                    'application_id':application_id
+                    'application_id':application_id,
+                    'date_reviewed': date_reviewed
                 }
             }
         )
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
-        print (employee_record)
-        print(application_record)
-        print(application_record['leave_type'])
-
-        print(application_record['qci_id'])
+        #print (employee_record)
+        #print(application_record)
+        leave_type = application_record['leave_type']
+        leave_days = application_record['days']
         try:
             if application_record is None:
                 return jsonify({'success':True,'message':"No application record Found"})
         except Exception as e:
             return jsonify({"succees":False,"error":e.__str__()}) 
         try:
-            if application_record['leave_type'] == 'sl':
-                sick = int(employee_record['bal_sl']) - application_record['days']
+            if leave_type == 'sl':
+                sick = int(employee_record['bal_sl']) - leave_days
                 if sick < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
                 else:
@@ -63,17 +63,17 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {
                             '$set':{
                                 'leave_status':'Approved'
+
                                 }
                         }
                     )
-            elif application_record['leave_type'] == 'cl':
-                casual = int(employee_record['bal_cl']) - application_record['days']
+            elif leave_type == 'cl':
+                casual = int(employee_record['bal_cl']) - leave_days
                 if casual < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
                 else:
@@ -85,7 +85,6 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {
@@ -94,8 +93,8 @@ class ApproveLeave(Resource):
                                 }
                         }
                     )
-            elif application_record['leave_type'] == 'pl':
-                privilege = int(employee_record['bal_pl']) - application_record['days']
+            elif leave_type == 'pl':
+                privilege = int(employee_record['bal_pl']) - leave_days
                 if privilege < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
                 else:
@@ -107,7 +106,6 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {
@@ -117,8 +115,8 @@ class ApproveLeave(Resource):
                         }
                     )
             
-            elif application_record['leave_type'] == 'ml':
-                maternity = int(employee_record['bal_ml']) - application_record['days']
+            elif leave_type == 'ml':
+                maternity = int(employee_record['bal_ml']) - leave_days
                 if maternity < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
                 else:
@@ -130,7 +128,6 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {
@@ -139,8 +136,8 @@ class ApproveLeave(Resource):
                                 }
                         }
                     )
-            elif application_record['leave_type'] == 'ptl':
-                ptl = int(employee_record['bal_ptl']) - application_record['days']
+            elif leave_type == 'ptl':
+                ptl = int(employee_record['bal_ptl']) - leave_days
                 if paternity < 0:
                     return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
                 else:
@@ -186,10 +183,10 @@ class ApproveLeave(Resource):
             send_email(
             employee_record['email'], "Leave application approved",
             ("Your " + leave_type + " leave application for " +
-             str(days) + " day(s) from " +
+             str(leave_days) + " day(s) from " +
              application_record['date_from'] + " to " + application_record['date_to'] +
              " has been aprroved. " + "Your new " + leave_type +
-             " leave balance is " + str(format_number(sick)) +
+             " leave balance is " + str(sick) +
              " day(s)."))
 
             return jsonify({'success':True,'message':'Leave Approved'})

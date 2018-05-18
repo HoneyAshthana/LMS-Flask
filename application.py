@@ -4,10 +4,10 @@ from flask_restful import Resource
 from connect_mongo import lms
 from auth import auth
 
-class Applications(Resource) :
+class Application(Resource) :
 
-    """func to show each employees application details"""
-    @auth
+    """shows each employees application details"""
+    #ss@auth
     @cross_origin()
     def get(self):
 

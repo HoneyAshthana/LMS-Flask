@@ -17,7 +17,7 @@ class ApplyLeave(Resource):
         leave_reason : Reason for Leave
         attachment : Attachment like files,etc. 
     """
-    
+
     #@auth
     @cross_origin()
     def post(self):
@@ -61,13 +61,14 @@ class ApplyLeave(Resource):
         except Exception as e :
             return jsonify({'success':False, 'error':e.__str__()})
 
-    @auth
+    #@auth
     @cross_origin()
     def get(self,id=None):
         """ Returns the application of particular QCI ID using application Id as argument"""
-
+        data=[]
         try:
             data=lms.applications.find_one({"application_id":id},{"_id":0})
+            print(data)
             if data:
                 return jsonify({"success":True,"data":data})                
             else:

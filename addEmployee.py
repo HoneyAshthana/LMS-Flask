@@ -7,7 +7,7 @@ import hashlib
 
 
 class AddEmployee(Resource) :
-    @auth
+    #@auth
     @cross_origin()
     def post(self) :
         """Add new employee
@@ -25,6 +25,7 @@ class AddEmployee(Resource) :
             bal_ml : Balance maternity leave only for female employee
             bal_ptl : Balance paternity leave only for male employee
             bal_eol : Balance extra ordinary leave for employee
+            password : Password of employee
         """
         try :
             data = request.get_json(force=True)
@@ -79,7 +80,7 @@ class AddEmployee(Resource) :
         except Exception as e :
             return jsonify({"success" : False, "error" : e.__str__()}) 
 
-    @auth
+    #@auth
     @cross_origin()
     def get(self, id=None) :
         """Displays employees details of particular qci id
