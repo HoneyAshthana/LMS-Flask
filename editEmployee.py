@@ -24,6 +24,7 @@ class EditEmployeeDetails(Resource) :
             bal_ml : Balance maternity leave only for female employee
             bal_ptl : Balance paternity leave only for male employee
             bal_eol : Balance extra ordinary leave for employee
+            password : new Password of employee
         """
         try :
             data = request.get_json(force=True)

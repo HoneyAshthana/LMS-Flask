@@ -1,12 +1,35 @@
-rom datetime import date
+from datetime import date
 import holidays
-from flask import jsonify
+from flask import jsonify,make_response, request
+import io
 from flask_restful import Resource
 from auth import auth
 from flask_cors import cross_origin
-
+import csv
 class RestrictedHolidays(Resource) :
-    @auth
+    def post(self):
+        f = request.files['data_file']
+        if not f:
+            return "No file"
+
+        stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.reader(stream)
+        #print("file contents: ", file_contents)
+        #print(type(file_contents))
+        print(csv_input)
+        for row in csv_input:
+            print(row)
+
+        stream.seek(0)
+        result = transform(stream.read())
+
+        response = make_response(result)
+        response.headers["Content-Disposition"] = "attachment; filename=result.csv"
+        return response
+
+
+    """
+    #@auth
     @cross_origin
     def get(self) :
 
@@ -21,6 +44,6 @@ class RestrictedHolidays(Resource) :
         
         print(custom_holidays)
 
-        return jsonify({'success' : True,'custom_holidays':custom_holidays})
+        return jsonify({'success' : True,'custom_holidays':custom_holidays})"""
 
 

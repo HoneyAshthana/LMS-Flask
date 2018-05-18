@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from general import send_email
 
 class DeclineLeave(Resource):
-    @auth
+    #@auth
     @cross_origin()
     def post():
         """Decline leave
@@ -19,9 +19,23 @@ class DeclineLeave(Resource):
         data = request.get_json(force=True)
         print(data)
         application_id = data['application_id']
+        qci_id = data['qci_id']
         leave_status = data['LeaveStatus']
         decline_reason = data['DeclineReason']
+        date_reviewed =  date_reviewed
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
+        lms.employees.update(
+            {'qci_id':qci_id },
+            {
+                '$push':
+                {
+                    'application_id':application_id,
+                    'date_reviewed': date_reviewed
+                }
+            }
+        )
+        application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
+        employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         try:
             if application_record is None or application_record.leave_status != 'pending':
                 return jsonify({'message': 'Cannot find this record in the database.'})
@@ -47,7 +61,7 @@ class DeclineLeave(Resource):
 
         # Send email
         send_email(
-            application_record['email'], "Leave application declined",
+            employee_record['email'], "Leave application declined",
             ("Your " + application_record['leave_type'] + " leave application for " + str(
                 application_record['days']) + " day(s) from " +
             application_record['date_from'] + " to " + application_record['date_to'] +

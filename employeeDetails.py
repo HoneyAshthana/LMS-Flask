@@ -6,7 +6,7 @@ from auth import auth
 
 class EmployeeDetails(Resource):
 
-    """func to show each employees detail"""
+    """shows all employees detail"""
     @auth
     @cross_origin()
     def get(self):
