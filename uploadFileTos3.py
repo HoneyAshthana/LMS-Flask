@@ -21,8 +21,7 @@ FILE_CONTENT_TYPES = { # these will be used to set the content type of S3 object
     'jpeg': 'image/jpeg',
     'png': 'image/png'
 }
-AWS_ACCESS_KEY_ID = 'AKIAI4LCX6J7W7VWEYIQ'
-AWS_SECRET_ACCESS_KEY = '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'
+
 print('hey')
 ## app initilization
 app = Flask(__name__)
