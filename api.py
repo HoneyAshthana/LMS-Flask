@@ -16,8 +16,7 @@ from admin import Admin
 from loginEmployee import LoginEmployee
 from declineLeave import DeclineLeave
 
-from restrictedHolidays import RestrictedHolidays
-from compulsoryHolidays import CompulsoryHolidays
+from holidays import Holidays
 
 
 app = Flask(__name__)
@@ -43,9 +42,9 @@ api.add_resource(Admin,"/lms/admin")
 api.add_resource(LoginAdmin,"/lms/loginAdmin")
 api.add_resource(LoginEmployee,"/lms/loginEmp")
 
-api.add_resource(CompulsoryHolidays,"/lms/compHoliday")
+api.add_resource(Holidays,"/lms/holiday")
 
-api.add_resource(RestrictedHolidays,"/lms/resHoliday")
+#api.add_resource(RestrictedHolidays,"/lms/resHoliday")
 
 #api.add_resource(UploadImage, '/upload_image')
 

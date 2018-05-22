@@ -7,12 +7,11 @@ from email.mime.base import MIMEBase
 from email import encoders
 
 
-
 def send_email(toaddr, subject, body):
     """Send email"""
     fromaddr = "honey.ashthana02@gmail.com"
     server = smtplib.SMTP('smtp.gmail.com: 587')
-    text='Heu'
+    text='Hey u'
     msg = MIMEMultipart()
     msg['From'] = fromaddr
     msg['To'] = 'honey.ashthana02@gmail.com'
@@ -38,6 +37,8 @@ def send_email(toaddr, subject, body):
     server.sendmail(fromaddr, rcpt, text)
     server.quit()
 #send_email('honey.ashthana02@gmail.com','dfghjk','dfgghjklhjk')
+
+
 
 """function that will send the user’s files directly into our bucket.
     using boto3’s Client.upload_fileobj method for this.

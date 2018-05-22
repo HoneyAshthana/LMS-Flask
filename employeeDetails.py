@@ -7,10 +7,10 @@ from auth import auth
 class EmployeeDetails(Resource):
 
     """shows all employees detail"""
-    @auth
+    #@auth
     @cross_origin()
     def get(self):
-
+        results=[]
         try:
             results = list(lms.employees.find({},{'_id':0}))
             return jsonify({'success':True,'data':results})                
