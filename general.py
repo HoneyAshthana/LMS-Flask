@@ -6,13 +6,11 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-
-
 def send_email(toaddr, subject, body):
     """Send email"""
     fromaddr = "honey.ashthana02@gmail.com"
     server = smtplib.SMTP('smtp.gmail.com: 587')
-    text='Heu'
+    text='Hey u'
     msg = MIMEMultipart()
     msg['From'] = fromaddr
     msg['To'] = 'honey.ashthana02@gmail.com'

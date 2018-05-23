@@ -5,31 +5,32 @@ Note: This method of uploading files is fine for smaller file sizes,
       but uploads should be queued using something like celery for
       larger ones.
 """
-from six import StringIO
 
-#from boto.s3.connection import S3Connection
-#from boto.s3.key import Key as S3Key
+from six import StringIO
+import boto3, botocore
+
 from flask import Flask
 from flask_restful import Api as FlaskRestfulAPI, Resource, reqparse, abort
 from werkzeug.datastructures import FileStorage
 
 ## config
 ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
-FILE_CONTENT_TYPES = { # these will be used to set the content type of S3 object. It is binary by default.
+FILE_CONTENT_TYPES = { # these will be used to set the content type of S3 object. 
+                        #It is binary by default.
     'jpg': 'image/jpeg',
     'jpeg': 'image/jpeg',
     'png': 'image/png'
 }
-AWS_ACCESS_KEY_ID = 'aws-access-key-id'
-AWS_SECRET_ACCESS_KEY = 'aws-secret-access-key'
-
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+print('hey')
 ## app initilization
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 ## extensions
 api = FlaskRestfulAPI(app)
-import boto3, botocore
+
 ## Helper Methods
 def upload_s3(file, key_name, content_type, bucket_name):
     """Uploads a given StringIO object to S3. Closes the file after upload.
@@ -42,10 +43,11 @@ def upload_s3(file, key_name, content_type, bucket_name):
     bucket_name -- name of the bucket where file needs to be uploaded.
     """
     # create connection
-    conn = S3Connection(app.config['AWS_ACCESS_KEY_ID'], app.config['AWS_SECRET_ACCESS_KEY'])
-    s3 = boto3.client("s3", aws_access_key_id=S3_KEY, aws_secret_access_key=S3_SECRET)
+    #conn = S3Connection(app.config['AWS_ACCESS_KEY_ID'], app.config['AWS_SECRET_ACCESS_KEY'])
+    s3 = boto3.client("s3", aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
     # upload the file after getting the right bucket
-    bucket = conn.get_bucket(bucket_name)
+    print('heya')
+    bucket = s3.get_bucket('qci-lms')
     obj = S3Key(bucket)
     obj.name = key_name
     obj.content_type = content_type
@@ -71,6 +73,7 @@ class FileStorageArgument(reqparse.Argument):
 
         # called so that this argument class will also be useful in
         # cases when argument type is not a file.
+        print('heyu')
         super(FileStorageArgument, self).convert(*args, **kwargs)
 
 
@@ -82,7 +85,7 @@ class UploadImage(Resource):
     put_parser.add_argument('image', required=True, type=FileStorage, location='files')
 
     def put(self):
-        #TODO: a check on file size needs to be there.
+        #a check on file size needs to be there.
 
         args = self.put_parser.parse_args()
         image = args['image']
