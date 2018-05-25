@@ -18,6 +18,7 @@ from declineLeave import DeclineLeave
 
 from holidays import Holidays
 
+from uploadFile import UploadFile
 
 app = Flask(__name__)
 api = Api(app)
@@ -46,7 +47,7 @@ api.add_resource(Holidays,"/lms/holiday")
 
 
 
-#api.add_resource(UploadImage, '/upload_image')
+api.add_resource(UploadFile, '/uploadFile')
 
 
 if  __name__=='__main__':

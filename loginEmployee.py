@@ -6,7 +6,8 @@ import hashlib
 import jwt
 from auth import auth
 from flask_cors import cross_origin
-
+"""from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(None)"""
 jwt_secret="qwertyuiiiimm"
 
 class LoginEmployee(Resource):
@@ -32,6 +33,8 @@ class LoginEmployee(Resource):
                 return jsonify({"success":False,"message":"please enter proper details"})
             
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+            #password = bcrypt.check_password_hash(password)
+
             employee = lms.employees.find_one({"qci_id":qci_id})
             
             if not employee:

@@ -13,31 +13,23 @@ class ApproveLeave(Resource):
             Args:
                 application_id : Application Id of Employee
                 qci_id : QCI ID of the applicant
+                date_reviewed : date on which application is reviewed
         """
         data = request.get_json(force=True)
         print (data)
         application_id = data['application_id']
-        qci_id = data['qci_id']
         date_reviewed = data['date_reviewed']
+        date_reviewed = dateToEpoch(date_reviewed)
         lms.applications.update(
-            {'application_id':application_id},
-            {
-                '$push':
-                {
-                    'leave_status':'Pending'
-                }
-            }
-        )
-        lms.employees.update(
             {'qci_id':qci_id },
             {
                 '$push':
                 {
-                    'application_id':application_id,
                     'date_reviewed': date_reviewed
                 }
             }
         )
+        date_reviewed=EpochToDate(date_reviewed)
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         #print (employee_record)
@@ -53,7 +45,7 @@ class ApproveLeave(Resource):
             if leave_type == 'sl':
                 sick = int(employee_record['bal_sl']) - leave_days
                 if sick < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance sick leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -75,7 +67,7 @@ class ApproveLeave(Resource):
             elif leave_type == 'cl':
                 casual = int(employee_record['bal_cl']) - leave_days
                 if casual < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance casual leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -96,7 +88,7 @@ class ApproveLeave(Resource):
             elif leave_type == 'pl':
                 privilege = int(employee_record['bal_pl']) - leave_days
                 if privilege < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance privilege leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -118,7 +110,7 @@ class ApproveLeave(Resource):
             elif leave_type == 'ml':
                 maternity = int(employee_record['bal_ml']) - leave_days
                 if maternity < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance maternity leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -139,7 +131,7 @@ class ApproveLeave(Resource):
             elif leave_type == 'ptl':
                 ptl = int(employee_record['bal_ptl']) - leave_days
                 if paternity < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance paternity leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -149,7 +141,6 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {
@@ -161,7 +152,7 @@ class ApproveLeave(Resource):
             else :
                 extra_ordinary = int(employee_record['bal_eol']) - application_record['days']
                 if extra_ordinary < 0:
-                    return jsonify({'message':'Balance leave is less than the days applied for leave!!'})
+                    return jsonify({'message':'Balance extra ordinary leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
@@ -182,15 +173,13 @@ class ApproveLeave(Resource):
                     )
             send_email(
             employee_record['email'], "Leave application approved",
-            ("Your " + leave_type + " leave application for " +
+            ("Your " + leave_type + "  application for " +
              str(leave_days) + " day(s) from " +
              application_record['date_from'] + " to " + application_record['date_to'] +
-             " has been aprroved. " + "Your new " + leave_type +
-             " leave balance is " + str(sick) +
-             " day(s)."))
+             " has been aprroved on " + date_reviewed + ". " ))
 
-            return jsonify({'success':True,'message':'Leave Approved'})
+            return jsonify({'success':True,'message':'Leave Approved!!'})
 
         except Exception as e:
-            return jsonify({"succees":False,"error":e.__str__(),'message':'dfghj'}) 
+            return jsonify({"succees":False,"error":e.__str__()}) 
                

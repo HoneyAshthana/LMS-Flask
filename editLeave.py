@@ -3,7 +3,7 @@ from auth import auth
 from flask_cors import cross_origin
 from flask import request, jsonify
 from connect_mongo import lms
-
+from general import*
 class EditLeave(Resource) :
     """Edit Leave of Employee
     Args:
@@ -26,7 +26,7 @@ class EditLeave(Resource) :
         data=request.get_json(force=True)
         print (data)
         application_id = data['application_id']
-        qci_id = data['qci_id']
+        #qci_id = data['qci_id']
         date_from = data['date_from']
         data_to = data['date_to']
         change_reason = data['leave_reason']
@@ -42,6 +42,9 @@ class EditLeave(Resource) :
             return jsonify({'success':False,"error" : e.__str__()})
         try:
             if application_record:
+                date_reviewed=dateToEpoch(date_reviewed)
+                date_from=dateToEpoch(date_from)
+                date_to=dateToEpoch(date_to)
                 lms.applications.update(
                     {'application_id':application_id},
                     {
@@ -55,24 +58,28 @@ class EditLeave(Resource) :
                         }
                     }
                 )
-                lms.employees.update(
-                    {'qci_id':qci_id},
+                lms.applications.update(
+                    {'application_id':application_id},
                     {
-                        '$push':
+                        '$set':
                         {
-                            'application_id':application_id
+                            'leave_status':'Approved'  
+                            'days':days                   
                         }
                     }
-                    )
-        # Send email
-        send_email(
-            employee_record['email'], "Leave application edited",
-            ("Your " + previous_leave_type+ " leave application for " +
-            str(previous_leave_days) + " day(s) from " + previous_start_date +
-            " to " + previous_end_date +
-            " has been modified. Your updated leave application is for " +
-            leave_name + " leave for " + str(leave_days) + " day(s) from " +
-            date_from + " to " + date_to + ". Reason for update: " +
-            leave_reason))
+                )
+                # Send email
+                send_email(
+                    employee_record['email'], "Leave application edited",
+                    ("Your " + leave_type + " application for " +
+                    " day(s) from " + application_record['date_from'] +
+                    " to " + application_record['date_to'] +
+                    " has been modified. Your updated leave application is for " +
+                    str(days) + " day(s) from " +
+                    date_from + " to " + date_to + ". Reason for update: " +
+                    leave_reason))
 
-        return jsonify({'success':True,'message': 'Leave record has been modified.'})
+            return jsonify({'success':True,'message': 'Leave record has been modified.'})
+
+        except Exception as e :
+            return jsonify({'success':False,'error':e.__str__()})

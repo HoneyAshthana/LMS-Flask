@@ -44,7 +44,35 @@ def send_email(toaddr, subject, body):
         a bucket name and 
         an optional acl keyword argument
 """
-"""
+
+import time
+from datetime import datetime
+from pytz import timezone
+
+jwt_secret="qwertyuiiiimm"
+
+TIME_ZONE =  'Asia/Kolkata'
+
+def EpochToDate(epoch,pattern=None):
+    """Conversion from epoch value to date
+        Args:
+        epoch : Epoch value
+        pattern : Output Date format
+    """
+    if not pattern:
+        pattern = "%d/%m/%Y"
+    return time.strftime(pattern,time.localtime(epoch))
+
+def dateToEpoch(date):
+    """Conversion from date to epoch value
+        Args:
+        date : date of which epoch value need to be calculated
+    """
+    return int(time.mktime(time.strptime(date,"%d/%m/%Y")))
+
+
+
+
 def upload_file_to_s3(file, bucket_name, acl="public-read"):
 
     try:
@@ -63,7 +91,7 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
         return e
 
     return "{}{}".format(app.config["S3_LOCATION"], file.filename)
-"""
+
 
 """ in addition to ACL we set the ContentType key in ExtraArgs to the file’s content type. 
 This is because by default, all files uploaded to an S3 bucket have their content type set 

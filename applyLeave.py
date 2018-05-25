@@ -4,6 +4,7 @@ from connect_mongo import lms
 from flask_cors import cross_origin
 import uuid
 from auth import auth
+from general import *
 class ApplyLeave(Resource):
 
     """Apply Application for Leave
@@ -42,6 +43,14 @@ class ApplyLeave(Resource):
             print(qci_id_exists)
             if qci_id_exists :
                 application_id = uuid.uuid4().hex
+                #print (leave_type)
+                if ((leave_type =='sl' and qci_id_exists['bal_sl'] >= days) or (leave_type =='cl' and qci_id_exists['bal_cl'] >= days) or (leave_type =='pl' and qci_id_exists['bal_pl'] >= days) or (leave_type =='ml' and qci_id_exists['bal_ml'] >= days)or (leave_type =='ptl' and qci_id_exists['bal_ptl'] >= days) or (leave_type =='eol' and qci_id_exists['bal_eol'] >= days)):
+                    message='Leave applied Successfully'
+                else :
+                    message = 'Balance leave is less than applied leave days'
+                date_of_apply=dateToEpoch(date_of_apply)
+                date_from=dateToEpoch(date_from)
+                date_to=dateToEpoch(date_to)
                 new_application = {
                     'application_id' : application_id,
                     'date_of_apply' : date_of_apply,
@@ -51,10 +60,20 @@ class ApplyLeave(Resource):
                     'date_to': date_to ,
                     'days' : days,
                     'leave_reason' : leave_reason,
+                    'leave_status':'Pending',
                     #'attachment' : attachment
                 }
                 lms.applications.insert_one(new_application)
-                return jsonify({'application_id':application_id,"success":True,'message':'Leave applied successfully'})
+                lms.employees.update( 
+                    {'qci_id':qci_id },
+                    {
+                        '$push':
+                        {
+                            'application_id':application_id,
+                        }
+                    }
+                )
+                return jsonify({'application_id':application_id,"success":True,'message':message})
             else:
                return jsonify({'success':False, 'message':'Try again!!'})
 
@@ -65,9 +84,9 @@ class ApplyLeave(Resource):
     @cross_origin()
     def get(self,id=None):
         """ Returns the application of particular QCI ID using application Id as argument"""
-        data=[]
+        #data=[]
         try:
-            data=lms.applications.find_one({"application_id":id},{"_id":0})
+            data=list(lms.applications.find({'qci_id':id},{"_id":0}))
             print(data)
             if data:
                 return jsonify({"success":True,"data":data})                

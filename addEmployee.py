@@ -4,6 +4,8 @@ from connect_mongo import lms
 from flask_cors import cross_origin
 from auth import auth
 import hashlib
+"""from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(None)"""
 
 
 class AddEmployee(Resource) :
@@ -58,6 +60,7 @@ class AddEmployee(Resource) :
                 return jsonify({'success' : True, 'message' : 'QCI ID already exists!'})
             else:
                 password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+                #password = bcrypt.generate_password_hash(password)
                 new_emp = {
                         'qci_id' : qci_id,
                         'name' : name,
