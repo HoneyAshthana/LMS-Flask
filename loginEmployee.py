@@ -29,18 +29,18 @@ class LoginEmployee(Resource):
             qci_id = data["qci_id"]
             password = data["password"]            
             if not qci_id or not password:
-
                 return jsonify({"success":False,"message":"please enter proper details"})
-            
+            #cursor = lms.employees.find_one({"qci_id": qci_id})
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-            #password = bcrypt.check_password_hash(password)
-
+            #password = bcrypt.check_password_hash(cursor['password'], password)
+            
             employee = lms.employees.find_one({"qci_id":qci_id})
             
             if not employee:
                 return jsonify({"success":False,"message":"Employee is not registerd"})
             
             else:
+                #if password == False:
                 if employee['password'] != password:
                     return jsonify({"success":False,"message":"incorrect password"})
             

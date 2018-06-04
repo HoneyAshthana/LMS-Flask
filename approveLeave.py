@@ -19,7 +19,6 @@ class ApproveLeave(Resource):
         print (data)
         application_id = data['application_id']
         date_reviewed = data['date_reviewed']
-        date_reviewed = dateToEpoch(date_reviewed)
         lms.applications.update(
             {'qci_id':qci_id },
             {
@@ -174,9 +173,9 @@ class ApproveLeave(Resource):
             send_email(
             employee_record['email'], "Leave application approved",
             ("Your " + leave_type + "  application for " +
-             str(leave_days) + " day(s) from " +
-             application_record['date_from'] + " to " + application_record['date_to'] +
-             " has been aprroved on " + date_reviewed + ". " ))
+            str(leave_days) + " day(s) from " +
+            epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
+            " has been aprroved on " + epochToDate(date_reviewed) + " . " ))
 
             return jsonify({'success':True,'message':'Leave Approved!!'})
 

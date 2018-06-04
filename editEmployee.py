@@ -3,9 +3,9 @@ from flask_restful import Resource
 from connect_mongo import lms
 from flask_cors import cross_origin
 from auth import auth
-#import hashlib
-from flask_bcrypt import Bcrypt
-bcrypt = Bcrypt(None)
+import hashlib
+"""from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(None)"""
 class EditEmployeeDetails(Resource) :
     @auth
     @cross_origin()
@@ -55,8 +55,8 @@ class EditEmployeeDetails(Resource) :
         try:
             qci_id_exist = lms.employees.find_one({'qci_id':qci_id})
             if qci_id_exist :
-                #password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-                password = bcrypt.generate_password_hash(password)
+                password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+                #password = bcrypt.generate_password_hash(password)
 
                 lms.employees.update(
                     {'qci_id' : qci_id},

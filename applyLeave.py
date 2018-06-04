@@ -83,15 +83,23 @@ class ApplyLeave(Resource):
     #@auth
     @cross_origin()
     def get(self,id=None):
-        """ Returns the application of particular QCI ID using application Id as argument"""
+        """ Returns the application of particular QCI ID 
+            Args :
+                qci_id : QCI ID
+        """
         #data=[]
         try:
             data=list(lms.applications.find({'qci_id':id},{"_id":0}))
+            for el in data:                
+                el['date_from']=epochToDate(el['date_from'])
+                el['date_to']=epochToDate(el['date_to'])
+                el['date_of_apply']=epochToDate(el['date_of_apply'])
+
             print(data)
             if data:
                 return jsonify({"success":True,"data":data})                
             else:
-                return jsonify({"success":False,"messages":"No Application available currently"})
+                return jsonify({"success":False,"messages":"No application available currently"})
 
         except Exception as e:
             return jsonify({'success':False, 'error':e.__str__()})

@@ -53,7 +53,7 @@ jwt_secret="qwertyuiiiimm"
 
 TIME_ZONE =  'Asia/Kolkata'
 
-def EpochToDate(epoch,pattern=None):
+def epochToDate(epoch,pattern=None):
     """Conversion from epoch value to date
         Args:
         epoch : Epoch value
@@ -69,6 +69,15 @@ def dateToEpoch(date):
         date : date of which epoch value need to be calculated
     """
     return int(time.mktime(time.strptime(date,"%d/%m/%Y")))
+import csv
+import json
+def csv2json(data):
+	reader = csv.DictReader
+	reader = csv.DictReader(data)
+	out = json.dumps([ row for row in reader ])
+	print ("JSON parsed!")  
+	return out
+	print ("JSON saved!")
 
 
 

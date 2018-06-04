@@ -35,7 +35,7 @@ class DeclineLeave(Resource):
                 '$push':
                 {
                     'decline_reason':decline_reason,
-                    'date_reviewed' : date_reviewed
+                    'date_reviewed' : dateToEpoch(date_reviewed)
                     #'date_reviewed':str(datetime.now().date())
                 }
             }
@@ -54,7 +54,7 @@ class DeclineLeave(Resource):
                 employee_record['email'], "Leave application declined",
                 ("Your " + application_record['leave_type'] + " application for " + str(
                     application_record['days']) + " day(s) from " +
-                application_record['date_from'] + " to " + application_record['date_to'] +
+                epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
                 " has been declined on " + date_reviewed + ". Reason for decline: " + decline_reason))
 
             return jsonify({'success':True,'message': 'Leave has been declined.'})

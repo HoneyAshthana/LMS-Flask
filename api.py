@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,make_response
 from flask_restful import Resource,Api
 from connect_mongo import lms
 #from general import send_email
@@ -15,7 +15,7 @@ from loginAdmin import LoginAdmin
 from admin import Admin
 from loginEmployee import LoginEmployee
 from declineLeave import DeclineLeave
-
+from empOnLeave import EmpOnLeave
 from holidays import Holidays
 
 from uploadFile import UploadFile
@@ -45,7 +45,7 @@ api.add_resource(LoginEmployee,"/lms/loginEmp")
 
 api.add_resource(Holidays,"/lms/holiday")
 
-
+api.add_resource(EmpOnLeave,"/lms/empOnLeave")
 
 api.add_resource(UploadFile, '/uploadFile')
 
