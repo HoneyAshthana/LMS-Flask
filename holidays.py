@@ -14,6 +14,7 @@ class Holidays(Resource) :
     """List of Restricted Holidays"""
     #@auth
     #@cross_origin
+    """
     def post(self):
         try:
             f   = request.files['data_file']
@@ -26,7 +27,7 @@ class Holidays(Resource) :
             mydict = dict(csv.reader(stream, delimiter=','))
             
             print(mydict)
-            lms.holiday.insert_one(mydict)
+            #lms.holiday.insert_one(mydict)
             return jsonify({'success':True})
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
@@ -46,19 +47,15 @@ class Holidays(Resource) :
             print(file_contents)
             result = csv2json(file_contents)
             response = (make_response(result))
-            #r=dict(response)
-            lms.holiday.insert_one(response)
-            return jsonify({'success':True})
-
+            print(response) 
+            #lms.holiday.insert_many(A)
+            return response
         
-            
-            #return jsonify({'success':True})
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
-    """ 
+    
 
-    #@cross_origin
-
+    @cross_origin()
     def get(self):
         try:
             resultant=list(lms.Holiday.find({},{'_id':0}))

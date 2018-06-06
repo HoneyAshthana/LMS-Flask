@@ -42,19 +42,16 @@ class EditLeave(Resource) :
             return jsonify({'success':False,"error" : e.__str__()})
         try:
             if application_record:
-                date_reviewed=dateToEpoch(date_reviewed)
-                date_from=dateToEpoch(date_from)
-                date_to=dateToEpoch(date_to)
                 lms.applications.update(
                     {'application_id':application_id},
                     {
                         '$push':
                         {
                             'leave_status':'Approved',
-                            'approve_date_from':date_from,
-                            'approve_date_to':date_to,
+                            'approve_date_from':dateToEpoch(date_from),
+                            'approve_date_to':dateToEpoch(date_to),
                             'changed_reason':change_reason,
-                            'date_reviewed': date_reviewed                       
+                            'date_reviewed': dateToEpoch(date_reviewed)                 
                         }
                     }
                 )
@@ -71,9 +68,9 @@ class EditLeave(Resource) :
                 # Send email
                 send_email(
                     employee_record['email'], "Leave application edited",
-                    ("Your " + leave_type + " application for " +
-                    " day(s) from " + application_record['date_from'] +
-                    " to " + application_record['date_to'] +
+                    ("Your " + application_record['leave_type'] + " application for " +
+                    " day(s) from " + epochToDate(application_record['date_from']) +
+                    " to " + epochToDate(application_record['date_to']) +
                     " has been modified. Your updated leave application is for " +
                     str(days) + " day(s) from " +
                     date_from + " to " + date_to + ". Reason for update: " +

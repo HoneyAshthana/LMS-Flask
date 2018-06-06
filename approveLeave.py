@@ -3,7 +3,7 @@ from flask_restful import Resource
 from connect_mongo import lms
 from flask_cors import cross_origin
 from auth import auth
-from general import send_email
+from general import *
 
 class ApproveLeave(Resource):
     #@auth
@@ -18,9 +18,10 @@ class ApproveLeave(Resource):
         data = request.get_json(force=True)
         print (data)
         application_id = data['application_id']
-        date_reviewed = data['date_reviewed']
+        date_reviewed = data['date_reviewed']        
+        date_reviewed=dateToEpoch(date_reviewed)
         lms.applications.update(
-            {'qci_id':qci_id },
+            {'application_id':application_id },
             {
                 '$push':
                 {
@@ -28,13 +29,13 @@ class ApproveLeave(Resource):
                 }
             }
         )
-        date_reviewed=EpochToDate(date_reviewed)
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         #print (employee_record)
         #print(application_record)
         leave_type = application_record['leave_type']
         leave_days = application_record['days']
+        qci_id = application_record['qci_id']
         try:
             if application_record is None:
                 return jsonify({'success':True,'message':"No application record Found"})
@@ -128,7 +129,7 @@ class ApproveLeave(Resource):
                         }
                     )
             elif leave_type == 'ptl':
-                ptl = int(employee_record['bal_ptl']) - leave_days
+                paternity = int(employee_record['bal_ptl']) - leave_days
                 if paternity < 0:
                     return jsonify({'message':'Balance paternity leave is less than the days applied for leave!!','success':False})
                 else:

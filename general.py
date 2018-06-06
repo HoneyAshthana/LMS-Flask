@@ -31,7 +31,7 @@ def send_email(toaddr, subject, body):
     msg.attach(MIMEText(html, 'html'))
     print(text)
     server.starttls()
-    server.login(fromaddr, "Bunny@0209")
+    server.login(fromaddr, "Bunny@****")
     text = msg.as_string()
     server.sendmail(fromaddr, rcpt, text)
     server.quit()
@@ -69,6 +69,8 @@ def dateToEpoch(date):
         date : date of which epoch value need to be calculated
     """
     return int(time.mktime(time.strptime(date,"%d/%m/%Y")))
+
+
 import csv
 import json
 def csv2json(data):
