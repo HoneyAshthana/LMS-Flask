@@ -22,6 +22,6 @@ class UploadFile(Resource) :
             return jsonify({'success':True, 'message':'File uploaded'})
         except Exception as e:
             return jsonify({'success':True, 'message':False})
-
+ 
 
 """

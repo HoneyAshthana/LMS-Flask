@@ -15,7 +15,7 @@ class DeclineLeave(Resource):
             leave_status: status of leave
             decline_reason: reason for declining leave
         """
-       
+               
         data = request.get_json(force=True)
         print(data)
         application_id = data['application_id']

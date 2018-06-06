@@ -23,6 +23,7 @@ class EditLeave(Resource) :
     @auth
     @cross_origin
     def post(self):
+        
         data=request.get_json(force=True)
         print (data)
         application_id = data['application_id']

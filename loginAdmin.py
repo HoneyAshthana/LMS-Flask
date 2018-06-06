@@ -49,4 +49,4 @@ class LoginAdmin(Resource):
         
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})
-            
+             

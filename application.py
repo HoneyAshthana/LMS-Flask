@@ -13,6 +13,7 @@ class Application(Resource) :
 
         try:
             results = list(lms.applications.find({},{'_id':0}))
+            
             for el in results: 
                 elm = el['application_id'] 
                 print (elm)

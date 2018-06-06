@@ -9,6 +9,7 @@ class Output1(Resource):
     @auth
     @cross_origin()
     def get(self):
+        
         """Returns all Approved Applications"""
         result=list(lms.applications.find({'leave_status':'Approved'},{'_id':0}))
         return jsonify({'success':True,'data':result})

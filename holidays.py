@@ -35,8 +35,8 @@ class Holidays(Resource) :
 
 
     """
-
-    #@cross_origin
+    @auth
+    @cross_origin
     def post(self):
         try:
             f   = request.files['file']
@@ -54,7 +54,7 @@ class Holidays(Resource) :
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
     
-
+    @auth
     @cross_origin()
     def get(self):
         try:

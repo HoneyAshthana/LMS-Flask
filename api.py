@@ -18,11 +18,10 @@ from declineLeave import DeclineLeave
 from empOnLeave import EmpOnLeave
 from holidays import Holidays
 
-from uploadFile import UploadFile
+#from uploadFile import UploadFile
 from input import Input
 from output1 import Output1
 from output2 import Output2
-
 
 app = Flask(__name__)
 api = Api(app)
@@ -51,7 +50,7 @@ api.add_resource(Holidays,"/lms/holiday")
 
 api.add_resource(EmpOnLeave,"/lms/empOnLeave")
 
-api.add_resource(UploadFile, '/uploadFile')
+#api.add_resource(UploadFile, '/uploadFile')
 api.add_resource(Input,'/lms/input')
 api.add_resource(Output1,'/lms/output1')
 api.add_resource(Output2,'/lms/output2')

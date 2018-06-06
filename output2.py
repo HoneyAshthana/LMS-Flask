@@ -9,6 +9,7 @@ class Output2(Resource):
     @auth
     @cross_origin()
     def get(self):
+        
         """Returns all rejected applications"""
         result=list(lms.applications.find({'leave_status':'Rejected'},{'_id':0}))
         return jsonify({'success':True,'data':result})

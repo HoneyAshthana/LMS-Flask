@@ -9,6 +9,7 @@ class Input(Resource):
     @auth
     @cross_origin()
     def get(self):
+        
         """Returns all pending applications"""
         result=list(lms.applications.find({'leave_status':'Pending'},{'_id':0}))
         return jsonify({'success':True,'data':result})

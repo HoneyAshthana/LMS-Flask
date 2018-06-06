@@ -9,6 +9,7 @@ class TotalEmployees(Resource):
     @cross_origin()
     def get(self):
         """Total no. of employees"""
+        
         count=0
         results = list(lms.employees.find({},{'_id':0}))
         for result in results:

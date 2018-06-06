@@ -7,6 +7,7 @@ import hashlib
 """from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(None)"""
 class EditEmployeeDetails(Resource) :
+    
     @auth
     @cross_origin()
     def post(self) :

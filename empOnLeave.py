@@ -4,10 +4,12 @@ from flask import request,jsonify
 from connect_mongo import lms
 from general import *
 from flask_cors import cross_origin
+from auth import auth
 class EmpOnLeave(Resource) :
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
+        """Total count of employees on leave"""
         data=request.get_json(force=True)
         date=data['date']
         print(date)

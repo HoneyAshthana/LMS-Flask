@@ -5,7 +5,6 @@ Note: This method of uploading files is fine for smaller file sizes,
       but uploads should be queued using something like celery for
       larger ones.
 """
-
 from six import StringIO
 import boto3, botocore
 

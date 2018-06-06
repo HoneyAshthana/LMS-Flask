@@ -5,11 +5,11 @@ from connect_mongo import lms
 from auth import auth
 
 class EmployeeDetails(Resource):
-    """shows all employees detail"""
     @auth
     @cross_origin()
     def get(self):
-        #results=[]
+        """shows all employees detail"""
+        
         try:
             results =list(lms.employees.find({},{'_id':0,'password':0}))
             return jsonify({'success':True,'data':results})                

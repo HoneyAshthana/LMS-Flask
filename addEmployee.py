@@ -82,6 +82,7 @@ class AddEmployee(Resource) :
 
         except Exception as e :
             return jsonify({"success" : False, "error" : e.__str__()}) 
+            
 
     @auth
     @cross_origin()

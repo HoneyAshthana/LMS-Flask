@@ -178,5 +178,6 @@ class ApproveLeave(Resource):
             return jsonify({'success':True,'message':'Leave Approved!!'})
 
         except Exception as e:
+            
             return jsonify({"succees":False,"error":e.__str__()}) 
                

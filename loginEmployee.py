@@ -11,7 +11,7 @@ bcrypt = Bcrypt(None)"""
 jwt_secret="qwertyuiiiimm"
 
 class LoginEmployee(Resource):
-    
+     
     @cross_origin()
     def post(self):
         
