@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from general import *
 
 class DeclineLeave(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
         """Decline leave
@@ -36,7 +36,6 @@ class DeclineLeave(Resource):
                     {
                         'decline_reason':decline_reason,
                         'date_reviewed' : dateToEpoch(date_reviewed)
-                        #'date_reviewed':str(datetime.now().date())
                     }
                 }
             )

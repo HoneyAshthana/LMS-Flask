@@ -6,7 +6,7 @@ from auth import auth
 from general import *
 
 class ApproveLeave(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
         """Approves Leave
@@ -16,7 +16,7 @@ class ApproveLeave(Resource):
                 date_reviewed : date on which application is reviewed
         """
         data = request.get_json(force=True)
-        print (data)
+        #print (data)
         application_id = data['application_id']
         date_reviewed = data['date_reviewed']        
         date_reviewed=dateToEpoch(date_reviewed)
@@ -31,8 +31,6 @@ class ApproveLeave(Resource):
         )
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
-        #print (employee_record)
-        #print(application_record)
         leave_type = application_record['leave_type']
         leave_days = application_record['days']
         qci_id = application_record['qci_id']
@@ -162,7 +160,6 @@ class ApproveLeave(Resource):
                         }
                     }
                     )                    
-                    #print(lms.applications)
                     lms.applications.update(
                         {'application_id':application_id},
                         {

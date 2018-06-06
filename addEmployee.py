@@ -9,7 +9,7 @@ bcrypt = Bcrypt(None)"""
 
 
 class AddEmployee(Resource) :
-    #@auth
+    @auth
     @cross_origin()
     def post(self) :
         """Add new employee
@@ -83,7 +83,7 @@ class AddEmployee(Resource) :
         except Exception as e :
             return jsonify({"success" : False, "error" : e.__str__()}) 
 
-    #@auth
+    @auth
     @cross_origin()
     def get(self, id=None) :
         """Displays employees details of particular qci id

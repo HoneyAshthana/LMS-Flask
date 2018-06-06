@@ -3,7 +3,7 @@ from auth import auth
 from flask_cors import cross_origin
 from flask import request, jsonify
 from connect_mongo import lms
-from general import*
+from general import *
 class EditLeave(Resource) :
     """Edit Leave of Employee
     Args:

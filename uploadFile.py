@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import request, jsonify
 from general import upload_file_to_s3
 
-
+"""Yet working
 class UploadFile(Resource) :
     def post(self) :
         try:
@@ -24,4 +24,4 @@ class UploadFile(Resource) :
             return jsonify({'success':True, 'message':False})
 
 
-
+"""

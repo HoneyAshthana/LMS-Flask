@@ -5,7 +5,7 @@ from flask import jsonify
 from auth import auth
 
 class TotalEmployees(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def get(self):
         """Total no. of employees"""

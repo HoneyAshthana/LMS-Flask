@@ -6,7 +6,7 @@ from connect_mongo import lms
 from auth import auth
 
 class DeleteEmployee(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
         """Delete Employee from Employee Pool
@@ -19,9 +19,9 @@ class DeleteEmployee(Resource):
             print (data)
             qci_id = data["qci_id"]
             deleted_emp = lms.employees.find_one({"qci_id":qci_id})
-            print(deleted_emp)
+            #print(deleted_emp)
             application_list=deleted_emp['application_id']
-            print(application_list)
+            #print(application_list)
             for app in application_list:
                 el=lms.applications.find_one({'application_id':app})
                 lms.oldapplications.insert_one(el)

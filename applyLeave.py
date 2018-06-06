@@ -40,10 +40,9 @@ class ApplyLeave(Resource):
         try:
             print(qci_id)
             qci_id_exists = lms.employees.find_one({"qci_id" : qci_id})
-            print(qci_id_exists)
+            #print(qci_id_exists)
             if qci_id_exists :
                 application_id = uuid.uuid4().hex
-                #print (leave_type)
                 if ((leave_type =='sl' and qci_id_exists['bal_sl'] >= days) or (leave_type =='cl' and qci_id_exists['bal_cl'] >= days) or (leave_type =='pl' and qci_id_exists['bal_pl'] >= days) or (leave_type =='ml' and qci_id_exists['bal_ml'] >= days)or (leave_type =='ptl' and qci_id_exists['bal_ptl'] >= days) or (leave_type =='eol' and qci_id_exists['bal_eol'] >= days)):
                     message='Leave applied Successfully'
                 else :
@@ -80,7 +79,7 @@ class ApplyLeave(Resource):
         except Exception as e :
             return jsonify({'success':False, 'error':e.__str__()})
 
-    #@auth
+    @auth
     @cross_origin()
     def get(self,id=None):
         """ Returns the application of particular QCI ID 
@@ -95,7 +94,6 @@ class ApplyLeave(Resource):
                 el['date_to']=epochToDate(el['date_to'])
                 el['date_of_apply']=epochToDate(el['date_of_apply'])
 
-            print(data)
             if data:
                 return jsonify({"success":True,"data":data})                
             else:

@@ -7,16 +7,12 @@ from general import *
 class Application(Resource) :
 
     """shows each employee's application details"""
-    #@auth
+    @auth
     @cross_origin()
     def get(self):
 
         try:
             results = list(lms.applications.find({},{'_id':0}))
-            print(results)
-            #emp_record=list(lms.employees.find({},{'_id':0}))
-            #print (emp_record)
-            print('fghj')
             for el in results: 
                 elm = el['application_id'] 
                 print (elm)
