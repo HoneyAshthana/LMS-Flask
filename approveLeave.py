@@ -6,7 +6,7 @@ from auth import auth
 from general import *
 
 class ApproveLeave(Resource):
-    @auth
+    #@auth
     @cross_origin()
     def post(self):
         """Approves Leave
@@ -32,6 +32,7 @@ class ApproveLeave(Resource):
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         leave_type = application_record['leave_type']
+        print (leave_type)
         leave_days = application_record['days']
         qci_id = application_record['qci_id']
         try:

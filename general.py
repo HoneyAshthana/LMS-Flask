@@ -31,7 +31,7 @@ def send_email(toaddr, subject, body):
     msg.attach(MIMEText(html, 'html'))
     print(text)
     server.starttls()
-    server.login(fromaddr, "Bunny@****")
+    server.login(fromaddr, "Bunny@020900")
     text = msg.as_string()
     server.sendmail(fromaddr, rcpt, text)
     server.quit()

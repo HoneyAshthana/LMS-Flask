@@ -35,8 +35,8 @@ class Holidays(Resource) :
 
 
     """
-    @auth
-    @cross_origin
+    #@auth
+    #@cross_origin
     def post(self):
         try:
             f   = request.files['file']
@@ -46,10 +46,15 @@ class Holidays(Resource) :
             file_contents = io.StringIO(f.stream.read().decode("UTF8"),newline=None)
             print(file_contents)
             result = csv2json(file_contents)
-            response = (make_response(result))
-            print(response) 
-            #lms.holiday.insert_many(A)
-            return response
+            print (result)
+            lms.holiday.insert({'data':result})
+            #r.inserted_ids
+
+            return jsonify({'data':result,'success':True})
+            #response = (make_response(result))
+            #print(response) 
+           
+            #   return response
         
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
@@ -58,7 +63,7 @@ class Holidays(Resource) :
     @cross_origin()
     def get(self):
         try:
-            resultant=list(lms.Holiday.find({},{'_id':0}))
+            resultant=list(lms.holiday.find({},{'_id':0}))
             return jsonify({"result": resultant})
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
