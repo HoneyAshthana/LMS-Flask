@@ -6,14 +6,14 @@ from flask_cors import cross_origin
 from general import *
 
 class DeclineLeave(Resource):
-    @auth
+    #@auth
     @cross_origin()
     def post(self):
         """Decline leave
         Args:
             application_id : the application id to decline
-            leave_status: status of leave
             decline_reason: reason for declining leave
+            date_reviewed : 
         """
                
         data = request.get_json(force=True)
@@ -22,41 +22,39 @@ class DeclineLeave(Resource):
         decline_reason = data['decline_reason']
         date_reviewed =  data['date_reviewed']
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
+        print(application_record)
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
+        print(employee_record)
+
         try:
-            if application_record is None or application_record['leave_status'] != 'pending':
-                return jsonify({'message': 'Cannot find this record in the database.','success':False})
+            if application_record is None and application_record['leave_status'] is not 'Pending' :
+                return jsonify({'success':True,'message':"No application record Found"})
         except Exception as e:
-            return jsonify({"success":False,"error":e.__str__()}) 
-        try:
-            lms.applications.update(
-                {'application_id':application_id},
-                {
-                    '$push':
-                    {
-                        'decline_reason':decline_reason,
-                        'date_reviewed' : dateToEpoch(date_reviewed)
-                    }
-                }
-            )
+            return jsonify({"succees":False,"error":e.__str__()})
+
+        try:    
             lms.applications.update(
                 {'application_id':application_id},
                 {
                     '$set':
                     {
-                        'leave_status':'Rejected'
+                        'leave_status':'Rejected',
+                        'decline_reason':str(decline_reason),
+                        'date_reviewed' : dateToEpoch(date_reviewed)
                     }
                 }
             )
+            
+            print('fghj')
             # Send email when application is rejected
             send_email(
                 employee_record['email'], "Leave application declined",
                 ("Your " + application_record['leave_type'] + " application for " + str(
                     application_record['days']) + " day(s) from " +
                 epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
-                " has been declined on " + epochToDate(date_reviewed) + ". Reason for decline: " + decline_reason))
-
+                " has been declined on " + date_reviewed + ". Reason for decline is " + decline_reason))
+            print('ghj')
             return jsonify({'success':True,'message': 'Leave has been declined.'})
 
         except Exception as e:
-            return jsonify({"succees":False,"error":e.__str__()}) 
+            return jsonify({"success":False,"error":e.__str__()}) 

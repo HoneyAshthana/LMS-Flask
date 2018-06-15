@@ -19,22 +19,27 @@ class DeleteEmployee(Resource):
             data = request.get_json(force=True)
             print (data)
             qci_id = data["qci_id"]
-            deleted_emp = (lms.employees.find_one({"qci_id":qci_id}))
-            print(deleted_emp)
-            print(deleted_emp['application_id'])
-            application_exist=deleted_emp.find_one({'application_id':application_id})
-            if application_exist:
+            delete_emp = (lms.employees.find_one({"qci_id":qci_id}))
+            print(delete_emp)
+            #application_list=delete_emp['application_id']
+            #print(application_list)
+            try:
+                application_list=delete_emp['application_id']
+            
                 print('ghj')
-                application_list=deleted_emp['application_id']
-                print(application_list)
                 for app in application_list:
+                    print(app)
                     el=lms.applications.find_one({'application_id':app})
-                    lms.oldapplications.insert_one(el)
+                    print(el)
+                    lms.oldapplications.insert(el)
                     lms.applications.delete_one({'application_id':app})
             
-            lms.trash.insert_one(deleted_emp)
-            
-            lms.employees.delete_one({"qci_id":qci_id})
+                lms.trash.insert_one(delete_emp)           
+                lms.employees.delete_one({"qci_id":qci_id}) 
+            except :
+                lms.trash.insert_one(delete_emp)                
+                lms.employees.delete_one({"qci_id":qci_id}) 
+          
             return jsonify({"success":True,"message":"Employee removed successfully!"})
         except Exception as e:
             return jsonify({"success":False,"error":e.__str__()})

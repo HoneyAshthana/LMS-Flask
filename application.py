@@ -7,7 +7,7 @@ from general import *
 class Application(Resource) :
 
     """shows each employee's application details"""
-    @auth
+    #@auth
     @cross_origin()
     def get(self):
 

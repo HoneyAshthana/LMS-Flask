@@ -46,23 +46,18 @@ class EditLeave(Resource) :
                 lms.applications.update(
                     {'application_id':application_id},
                     {
-                        '$push':
+                        '$set':
                         {
                             'leave_status':'Approved',
                             'approve_date_from':dateToEpoch(date_from),
                             'approve_date_to':dateToEpoch(date_to),
                             'changed_reason':change_reason,
-                            'date_reviewed': dateToEpoch(date_reviewed)                 
+                            'date_reviewed': dateToEpoch(date_reviewed),   
+                            'days':days               
                         }
                     }
                 )
-                lms.applications.update(
-                    {'application_id':application_id},
-                    {
-                        '$set':
-                        {
-                            'leave_status':'Approved'  
-                            'days':days                   
+                                        
                         }
                     }
                 )

@@ -15,8 +15,9 @@ from loginAdmin import LoginAdmin
 from admin import Admin
 from loginEmployee import LoginEmployee
 from declineLeave import DeclineLeave
-from empOnLeave import EmpOnLeave
+from count import EmpOnLeaveCount
 from holidays import Holidays
+from empOnleave import EmpOnLeave
 
 #from uploadFile import UploadFile
 from input import Input
@@ -48,13 +49,13 @@ api.add_resource(LoginEmployee,"/lms/loginEmp")
 
 api.add_resource(Holidays,"/lms/holiday")
 
-api.add_resource(EmpOnLeave,"/lms/empOnLeave")
+api.add_resource(EmpOnLeaveCount,"/lms/count")
 
 #api.add_resource(UploadFile, '/uploadFile')
 api.add_resource(Input,'/lms/input')
 api.add_resource(Output1,'/lms/output1')
 api.add_resource(Output2,'/lms/output2')
-
+api.add_resource(EmpOnLeave,'/lms/empOnLeave')
 
 if  __name__=='__main__':
     app.run(host="0.0.0.0",debug=True)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

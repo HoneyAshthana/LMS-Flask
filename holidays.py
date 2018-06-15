@@ -48,23 +48,17 @@ class Holidays(Resource) :
             result = csv2json(file_contents)
             print (result)
             lms.holiday.insert({'data':result})
-            #r.inserted_ids
-
-            return jsonify({'data':result,'success':True})
-            #response = (make_response(result))
-            #print(response) 
-           
-            #   return response
-        
+            return jsonify({'message':"CSV uploaded successfully",'success':True})
+    
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
     
-    @auth
+    #@auth
     @cross_origin()
     def get(self):
         try:
             resultant=list(lms.holiday.find({},{'_id':0}))
-            return jsonify({"result": resultant})
+            return jsonify({"result": resultant,'success':True})
         except Exception as e:
             return jsonify({'success':False,'error':e.__str__()})
 

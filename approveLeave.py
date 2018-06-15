@@ -6,7 +6,7 @@ from auth import auth
 from general import *
 
 class ApproveLeave(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
         """Approves Leave
@@ -19,13 +19,12 @@ class ApproveLeave(Resource):
         #print (data)
         application_id = data['application_id']
         date_reviewed = data['date_reviewed']        
-        date_reviewed=dateToEpoch(date_reviewed)
         lms.applications.update(
             {'application_id':application_id },
             {
-                '$push':
+                '$set':
                 {
-                    'date_reviewed': date_reviewed
+                    'date_reviewed': dateToEpoch(date_reviewed)
                 }
             }
         )
@@ -174,7 +173,7 @@ class ApproveLeave(Resource):
             ("Your " + leave_type + "  application for " +
             str(leave_days) + " day(s) from " +
             epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
-            " has been aprroved on " + epochToDate(date_reviewed) + " . " ))
+            " has been aprroved on " + date_reviewed + " . " ))
 
             return jsonify({'success':True,'message':'Leave Approved!!'})
 
