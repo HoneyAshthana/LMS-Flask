@@ -57,10 +57,7 @@ class EditLeave(Resource) :
                         }
                     }
                 )
-                                        
-                        }
-                    }
-                )
+                
                 # Send email
                 send_email(
                     employee_record['email'], "Leave application edited",

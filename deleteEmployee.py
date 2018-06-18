@@ -26,7 +26,7 @@ class DeleteEmployee(Resource):
             try:
                 application_list=delete_emp['application_id']
             
-                print('ghj')
+                print(application_list)
                 for app in application_list:
                     print(app)
                     el=lms.applications.find_one({'application_id':app})
