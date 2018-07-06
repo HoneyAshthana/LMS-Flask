@@ -19,13 +19,13 @@ class ApplyLeave(Resource):
         attachment : Attachment like files,etc. 
     """
 
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
 
         try:
             data = request.get_json(force=True)
-            print (data)
+            print(data)
             date_of_apply = data['date_of_apply']
             qci_id = data['qci_id']
             leave_type = data['leave_type']
@@ -38,18 +38,16 @@ class ApplyLeave(Resource):
             return jsonify({'success':False, 'error':e.__str__()})
 
         try:
-            print(qci_id)
             qci_id_exists = lms.employees.find_one({"qci_id" : qci_id})
-            #print(qci_id_exists)
             if qci_id_exists :
                 application_id = uuid.uuid4().hex
                 if ((leave_type =='sl' and qci_id_exists['bal_sl'] >= days) or (leave_type =='cl' and qci_id_exists['bal_cl'] >= days) or (leave_type =='pl' and qci_id_exists['bal_pl'] >= days) or (leave_type =='ml' and qci_id_exists['bal_ml'] >= days)or (leave_type =='ptl' and qci_id_exists['bal_ptl'] >= days) or (leave_type =='eol' and qci_id_exists['bal_eol'] >= days)):
-                    message='Leave applied Successfully'
+                    message = 'Leave applied Successfully'
                 else :
-                    message = 'Balance leave is less than applied leave days'
-                date_of_apply=dateToEpoch(date_of_apply)
-                date_from=dateToEpoch(date_from)
-                date_to=dateToEpoch(date_to)
+                    message = 'Balance leave is less than applied day for leave'
+                date_of_apply = dateToEpoch(date_of_apply)
+                date_from = dateToEpoch(date_from)
+                date_to = dateToEpoch(date_to)
                 new_application = {
                     'application_id' : application_id,
                     'date_of_apply' : date_of_apply,
@@ -86,21 +84,19 @@ class ApplyLeave(Resource):
             Args :
                 qci_id : QCI ID
         """
-        #data=[]
         try:
-            data=list(lms.applications.find({'qci_id':id},{"_id":0}))
+            data = list(lms.applications.find({'qci_id':id},{"_id":0}))
             for el in data:                
-                el['date_from']=epochToDate(el['date_from'])
-                el['date_to']=epochToDate(el['date_to'])
-                el['date_of_apply']=epochToDate(el['date_of_apply'])
-
+                el['date_from'] = epochToDate(el['date_from'])
+                el['date_to'] = epochToDate(el['date_to'])
+                el['date_of_apply'] = epochToDate(el['date_of_apply'])
             if data:
-                return jsonify({"success":True,"data":data})                
+                return jsonify({"success" : True, "data" : data})                
             else:
-                return jsonify({"success":False,"messages":"No application available currently"})
+                return jsonify({"success" : False, "messages" : "No application available currently"})
 
         except Exception as e:
-            return jsonify({'success':False, 'error':e.__str__()})
+            return jsonify({'success' : False, 'error' : e.__str__()})
             
 
 

@@ -6,14 +6,14 @@ from flask_cors import cross_origin
 from general import *
 
 class DeclineLeave(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
         """Decline leave
         Args:
             application_id : the application id to decline
             decline_reason: reason for declining leave
-            date_reviewed : 
+            date_reviewed : date on which application is reviewed
         """
                
         data = request.get_json(force=True)
@@ -25,7 +25,6 @@ class DeclineLeave(Resource):
         print(application_record)
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         print(employee_record)
-
         try:
             if application_record is None and application_record['leave_status'] is not 'Pending' :
                 return jsonify({'success':True,'message':"No application record Found"})
@@ -45,7 +44,6 @@ class DeclineLeave(Resource):
                 }
             )
             
-            print('fghj')
             # Send email when application is rejected
             send_email(
                 employee_record['email'], "Leave application declined",
@@ -53,7 +51,6 @@ class DeclineLeave(Resource):
                     application_record['days']) + " day(s) from " +
                 epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
                 " has been declined on " + date_reviewed + ". Reason for decline is " + decline_reason))
-            print('ghj')
             return jsonify({'success':True,'message': 'Leave has been declined.'})
 
         except Exception as e:

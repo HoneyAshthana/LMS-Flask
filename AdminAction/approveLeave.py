@@ -16,7 +16,7 @@ class ApproveLeave(Resource):
                 date_reviewed : date on which application is reviewed
         """
         data = request.get_json(force=True)
-        #print (data)
+        print(data)
         application_id = data['application_id']
         date_reviewed = data['date_reviewed']        
         lms.applications.update(
@@ -24,126 +24,128 @@ class ApproveLeave(Resource):
             {
                 '$set':
                 {
-                    'date_reviewed': dateToEpoch(date_reviewed)
+                    'date_reviewed' : dateToEpoch(date_reviewed)
                 }
             }
         )
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
+        print(application_record)
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
         leave_type = application_record['leave_type']
-        print (leave_type)
+        print(leave_type)
         leave_days = application_record['days']
         qci_id = application_record['qci_id']
         try:
-            if application_record is None:
-                return jsonify({'success':True,'message':"No application record Found"})
+            if application_record is None :
+                return jsonify({'success' : True, 'message' : "No application record Found"})
         except Exception as e:
-            return jsonify({"succees":False,"error":e.__str__()}) 
+            return jsonify({"succees" : False, "error" : e.__str__()}) 
         try:
             if leave_type == 'sl':
                 sick = int(employee_record['bal_sl']) - leave_days
                 if sick < 0:
-                    return jsonify({'message':'Balance sick leave is less than the days applied for leave!!','success':False})
+                    return jsonify({'message' : 'Balance sick leave is less than the days applied for leave!!', 'success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
                     {
-                        '$set':{
-                            'bal_sl':sick
+                        '$set' : {
+                            'bal_sl' : sick
                         }
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
-
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
-            elif leave_type == 'cl':
+                    #leave_type = 'Sick Leave'                    
+
+            elif leave_type == 'cl' :
                 casual = int(employee_record['bal_cl']) - leave_days
-                if casual < 0:
+                if casual < 0 :
                     return jsonify({'message':'Balance casual leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
                     {
-                        '$set':{
+                        '$set' : {
                             'bal_cl':casual
                         }
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
-            elif leave_type == 'pl':
+            elif leave_type == 'pl' :
                 privilege = int(employee_record['bal_pl']) - leave_days
-                if privilege < 0:
+                if privilege < 0 :
                     return jsonify({'message':'Balance privilege leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
                     {
-                        '$set':{
-                            'bal_pl':  privilege
+                        '$set' : {
+                            'bal_pl' :  privilege
                         }
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
             
-            elif leave_type == 'ml':
+            elif leave_type == 'ml' :
                 maternity = int(employee_record['bal_ml']) - leave_days
-                if maternity < 0:
-                    return jsonify({'message':'Balance maternity leave is less than the days applied for leave!!','success':False})
+                if maternity < 0 :
+                    return jsonify({'message' : 'Balance maternity leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
                     {
-                        '$set':{
-                            'bal_ml':maternity
+                        '$set' : {
+                            'bal_ml' : maternity
                         }
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
-            elif leave_type == 'ptl':
+            elif leave_type == 'ptl' :
                 paternity = int(employee_record['bal_ptl']) - leave_days
-                if paternity < 0:
+                if paternity < 0 :
                     return jsonify({'message':'Balance paternity leave is less than the days applied for leave!!','success':False})
                 else:
                     lms.employees.update(
                     {'qci_id' : qci_id},
                     {
-                        '$set':{
-                            'bal_ptl':paternity
+                        '$set' : {
+                            'bal_ptl' : paternity
                         }
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
@@ -161,23 +163,20 @@ class ApproveLeave(Resource):
                     }
                     )                    
                     lms.applications.update(
-                        {'application_id':application_id},
+                        {'application_id' : application_id},
                         {
-                            '$set':{
-                                'leave_status':'Approved'
+                            '$set' : {
+                                'leave_status' : 'Approved'
                                 }
                         }
                     )
             send_email(
             employee_record['email'], "Leave application approved",
-            ("Your " + leave_type + "  application for " +
+            ("Your leave application for " +
             str(leave_days) + " day(s) from " +
             epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
             " has been aprroved on " + date_reviewed + " . " ))
-
-            return jsonify({'success':True,'message':'Leave Approved!!'})
+            return jsonify({'success':True, 'message' : 'Leave Approved!!'})
 
         except Exception as e:
-            
-            return jsonify({"succees":False,"error":e.__str__()}) 
-               
+            return jsonify({"succees":False, "error":e.__str__()}) 

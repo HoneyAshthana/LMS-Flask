@@ -21,7 +21,7 @@ class EditLeave(Resource) :
     """
 
     @auth
-    @cross_origin
+    @cross_origin()
     def post(self):
         
         data=request.get_json(force=True)
@@ -29,24 +29,26 @@ class EditLeave(Resource) :
         application_id = data['application_id']
         #qci_id = data['qci_id']
         date_from = data['date_from']
-        data_to = data['date_to']
-        change_reason = data['leave_reason']
+        date_to = data['date_to']
+        change_reason = data['change_reason']
         days = data['days']
         date_reviewed = data['date_reviewed']
         application_record = lms.applications.find_one({'application_id':application_id})
+        print(application_record)
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
-
+        print(employee_record)
         try:
             if application_record is None:
-            return jsonify({'success':True,'message': 'Cannot find this record in the database.'})
+                return jsonify({'success':True,'message': 'Cannot find this record in the database.'})
         except Exception as e :
             return jsonify({'success':False,"error" : e.__str__()})
         try:
-            if application_record:
+            if application_record['leave_status'] is 'Pending':
+                print('ghj')
                 lms.applications.update(
                     {'application_id':application_id},
                     {
-                        '$set':
+                        '$push':
                         {
                             'leave_status':'Approved',
                             'approve_date_from':dateToEpoch(date_from),
@@ -67,7 +69,7 @@ class EditLeave(Resource) :
                     " has been modified. Your updated leave application is for " +
                     str(days) + " day(s) from " +
                     date_from + " to " + date_to + ". Reason for update: " +
-                    leave_reason))
+                    change_reason))
 
             return jsonify({'success':True,'message': 'Leave record has been modified.'})
 

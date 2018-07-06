@@ -31,7 +31,7 @@ class AddEmployee(Resource) :
         """
         try :
             data = request.get_json(force=True)
-            print(data)
+            #print(data)
             qci_id = data['qci_id']
             name = data['name']
             email = data['email']
@@ -72,8 +72,8 @@ class AddEmployee(Resource) :
                         'bal_cl': bal_cl,
                         'bal_sl' : bal_sl,
                         'bal_pl' : bal_pl,
-                        'bal_ml': bal_ml,
-                        'bal_ptl': bal_ptl,
+                        'bal_ml' : bal_ml,
+                        'bal_ptl' : bal_ptl,
                         'bal_eol' : bal_eol,     
                         'password' : password
                         }                                      

@@ -14,13 +14,13 @@ class Admin(Resource) :
         password : Admin's password
     """
     
-    #@auth
+    @auth
     @cross_origin()
     def post(self):
 
         try:    
             data=request.get_json(force=True)
-            print(data)
+            #print(data)
             email = data["email"]
             name=data["name"]
             password=data["password"]
@@ -29,7 +29,7 @@ class Admin(Resource) :
 
         try:
             if not email:
-                return jsonify({"success":False,"message":"Please provide email"})
+                return jsonify({"success":False,"message":"Please provide a valid email"})
 
             admin_exist = lms.admin.find_one({"email":email})
         
@@ -39,7 +39,6 @@ class Admin(Resource) :
             else:
                 uid = uuid.uuid4().hex
                 password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-                #print(password)
                 new_admin={    
                     "name":name,    
                     "email":email,

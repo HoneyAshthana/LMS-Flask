@@ -6,7 +6,7 @@ from connect_mongo import lms
 from general import *
 
 class Output1(Resource):
-    #@auth
+    @auth
     @cross_origin()
     def get(self):
         

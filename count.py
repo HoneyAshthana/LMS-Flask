@@ -9,36 +9,30 @@ class EmpOnLeaveCount(Resource) :
     @auth
     @cross_origin()
     def post(self):
-        """Total count of employees on leave"""
+        """Counts total employees on leave
+            Args :
+            dates:Total list of working dates
+        """
         parser = reqparse.RequestParser()
         parser.add_argument('dates', action='append')
         args = parser.parse_args()
-
         dates=args['dates']
-        print(dates)
+        #print(dates)
         try:
-            #myel=[]
             apIds=[]
             count1=[]
             for date in dates:
-                print(date)
                 count=0
-
                 if date:
                     date = dateToEpoch(date)
-                    dicts = list(lms.applications.find({'leave_status':'Approved'},{'_id':0,'days': 0,'leave_reason': 0, 'leave_status': 0,'leave_type': 0,'qci_id': 0}))
-                    print(dicts)                  
-                    for item in dicts :
+                    emp_list = list(lms.applications.find({'leave_status':'Approved'},{'_id':0,'days': 0,'leave_reason': 0, 'leave_status': 0,'leave_type': 0,'qci_id': 0}))                
+                    for item in emp_list :
                         if (item["date_from"] <= date <=item['date_to']):
                             count += 1
                             apIds.append(item['application_id'])
-                    print(apIds)
                     count1.append(count)
-                    print(count1)
-            
-            return jsonify({'success':True,'count':count1})
+            result=dict(zip(dates,count1))
+            return jsonify({'success':True,'data':result})
             
         except Exception as e:
             return jsonify({'success':False, 'error':e.__str__()})
-
-                    

@@ -1,43 +1,25 @@
-"""#Configure custom logging
-from logging.config import dictConfig
+"""import logging
+from logging.handlers import RotatingFileHandler
 
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
-#to send an email when errors and higher are logged.
-import logging
-from logging.handlers import SMTPHandler
-
-mail_handler = SMTPHandler(
-    mailhost='127.0.0.1',
-    fromaddr='honey.ashthana02@gmail.com',
-    toaddrs=['honey.ashthana02@gmail.com'],
-    subject='Application Error'
-)
-mail_handler.setLevel(logging.ERROR)
-mail_handler.setFormatter(logging.Formatter(
-    '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
-))
-
-if not app.debug:
-    app.logger.addHandler(mail_handler)
-    """
-
-import logging
-from api import app
+from api import app"""
 #logging
-handler = logging.StreamHandler()
+"""handler = RotatingFileHandler('history.log', maxBytes=100000, backupCount=1)
+#handler = logging.StreamHandler()
 handler.setLevel(logging.INFO)
-app.logger.addHandler(handler)
+handler.setLevel(logging.ERROR) formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+app.logger.addHandler(handler)"""
+"""
+formatter = logging.Formatter(
+        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
+handler = RotatingFileHandler('history.log', maxBytes=10000000, backupCount=5)
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)"""
+"""
+from logging import WARNING, FileHandler
+from api import app
+
+file_handler = FileHandler('errorlog.txt')
+file_handler.setLevel(WARNING)
+app.logger.addHandler(file_handler)
+"""
