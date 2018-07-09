@@ -20,9 +20,9 @@ class Holidays(Resource) :
             if not f:
                 return "No file"
             file_contents = io.StringIO(f.stream.read().decode("UTF8"),newline=None)
-            print(file_contents)
+            #print(file_contents)
             result = csv2json(file_contents)
-            print (result)
+            #print (result)
             lms.holiday.insert({'data':result})
             return jsonify({'message':"CSV uploaded successfully",'success':True})
     

@@ -17,14 +17,14 @@ class DeclineLeave(Resource):
         """
                
         data = request.get_json(force=True)
-        print(data)
+        #print(data)
         application_id = data['application_id']
         decline_reason = data['decline_reason']
         date_reviewed =  data['date_reviewed']
         application_record = lms.applications.find_one({'application_id':application_id},{'_id':0})
-        print(application_record)
+        #print(application_record)
         employee_record = lms.employees.find_one({'application_id':application_id},{'_id':0})
-        print(employee_record)
+        #print(employee_record)
         try:
             if application_record is None and application_record['leave_status'] is not 'Pending' :
                 return jsonify({'success':True,'message':"No application record Found"})
@@ -47,7 +47,7 @@ class DeclineLeave(Resource):
             # Send email when application is rejected
             send_email(
                 employee_record['email'], "Leave application declined",
-                ("Your " + application_record['leave_type'] + " application for " + str(
+                ("Your leave application (" + application_record['leave_type'] + ") for " + str(
                     application_record['days']) + " day(s) from " +
                 epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
                 " has been declined on " + date_reviewed + ". Reason for decline is " + decline_reason))

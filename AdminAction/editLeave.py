@@ -44,7 +44,6 @@ class EditLeave(Resource) :
             return jsonify({'success':False,"error" : e.__str__()})
         try:
             if application_record['leave_status'] is 'Pending':
-                print('ghj')
                 lms.applications.update(
                     {'application_id':application_id},
                     {
@@ -63,7 +62,7 @@ class EditLeave(Resource) :
                 # Send email
                 send_email(
                     employee_record['email'], "Leave application edited",
-                    ("Your " + application_record['leave_type'] + " application for " +
+                    ("Your leave application (" + application_record['leave_type'] + " ) for " +
                     " day(s) from " + epochToDate(application_record['date_from']) +
                     " to " + epochToDate(application_record['date_to']) +
                     " has been modified. Your updated leave application is for " +

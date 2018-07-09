@@ -172,7 +172,7 @@ class ApproveLeave(Resource):
                     )
             send_email(
             employee_record['email'], "Leave application approved",
-            ("Your leave application for " +
+            ("Your leave application (" + leave_type + ") for " +
             str(leave_days) + " day(s) from " +
             epochToDate(application_record['date_from']) + " to " + epochToDate(application_record['date_to']) +
             " has been aprroved on " + date_reviewed + " . " ))

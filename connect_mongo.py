@@ -1,6 +1,5 @@
-from flask_pymongo import MongoClient
+from flask_pymongo import MongoClient, ASCENDING, DESCENDING
 #mongo_ip = "172.17.0.8"
-
 """Setting up database connection using flask PyMongo"""
 
 mongo_ip = "localhost"

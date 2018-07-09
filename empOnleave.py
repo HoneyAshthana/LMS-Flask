@@ -42,20 +42,16 @@ class EmpOnLeave(Resource) :
                 #     details.append(detail)
                 for app in app_list :
                     detail1=lms.applications.find_one({'application_id':app},{'_id':0})
-                    print(detail1)
+                    #print(detail1)
                     app_detail.append(detail1)
 
                     detail = (lms.employees.find_one({'application_id':app},{'_id':0,'password':0,'application_id':0}))
-                    print(detail)
+                    #print(detail)
                     details.append(detail)
-                
-
-                print(details)
-                print(app_list)
+            
             return jsonify({'success':True,'data':details,'app_detail':app_detail})
 
         except Exception as e:
-            #logger.warning("Input not in suitable format")
             return jsonify({'success':False,'error':e.__str__()})
 
         

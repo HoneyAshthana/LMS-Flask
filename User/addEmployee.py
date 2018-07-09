@@ -55,6 +55,9 @@ class AddEmployee(Resource) :
             return jsonify({'success' : False, 'error' : e.__str__()})
         
         try:
+            #indexing on collection employees
+            lms.employees.create_index("name",unique=True)
+
             qci_id_exist = lms.employees.find_one({'qci_id' : qci_id})
             if qci_id_exist :
                 return jsonify({'success' : True, 'message' : 'QCI ID already exists!'})

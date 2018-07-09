@@ -70,6 +70,10 @@ class ApplyLeave(Resource):
                         }
                     }
                 )
+                lms.applications.create_index("leave_status")
+                lms.applications.create_index("leave_type")
+                lms.applications.create_index("date_of_apply")
+
                 return jsonify({'application_id':application_id,"success":True,'message':message})
             else:
                return jsonify({'success':False, 'message':'Try again!!'})
