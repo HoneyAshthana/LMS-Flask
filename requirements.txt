@@ -12,7 +12,7 @@ Flask-Mail==0.9.1
 Flask-PyMongo==0.5.1
 Flask-RESTful==0.3.6
 idna==2.6
-ipython==6.3.1
+ipython==7.16.3
 ipython-genutils==0.2.0
 itsdangerous==0.24
 jedi==0.12.0
